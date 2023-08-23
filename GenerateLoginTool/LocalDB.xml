@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<namespace name="LocalDB">
+  <class name="TLocalDB">
+    <ancestor name="TObject" namespace="System">
+      <methodref name="Create" visibility="public">
+      </methodref>
+      <methodref name="Free" visibility="public">
+      </methodref>
+      <methodref name="InitInstance" visibility="public">
+      </methodref>
+      <methodref name="CleanupInstance" visibility="public">
+      </methodref>
+      <methodref name="ClassType" visibility="public">
+      </methodref>
+      <methodref name="ClassName" visibility="public">
+      </methodref>
+      <methodref name="ClassNameIs" visibility="public">
+      </methodref>
+      <methodref name="ClassParent" visibility="public">
+      </methodref>
+      <methodref name="ClassInfo" visibility="public">
+      </methodref>
+      <methodref name="InstanceSize" visibility="public">
+      </methodref>
+      <methodref name="InheritsFrom" visibility="public">
+      </methodref>
+      <methodref name="MethodAddress" visibility="public">
+      </methodref>
+      <methodref name="MethodName" visibility="public">
+      </methodref>
+      <methodref name="FieldAddress" visibility="public">
+      </methodref>
+      <methodref name="GetInterface" visibility="public">
+      </methodref>
+      <methodref name="GetInterfaceEntry" visibility="public">
+      </methodref>
+      <methodref name="GetInterfaceTable" visibility="public">
+      </methodref>
+      <methodref name="SafeCallException" visibility="public">
+      </methodref>
+      <methodref name="AfterConstruction" visibility="public">
+      </methodref>
+      <methodref name="BeforeDestruction" visibility="public">
+      </methodref>
+      <methodref name="Dispatch" visibility="public">
+      </methodref>
+      <methodref name="DefaultHandler" visibility="public">
+      </methodref>
+      <methodref name="NewInstance" visibility="public">
+      </methodref>
+      <methodref name="FreeInstance" visibility="public">
+      </methodref>
+      <methodref name="Destroy" visibility="public">
+      </methodref>
+    </ancestor>
+    <members>
+      <field name="m_PreList" type="TCnHashTableSmall" visibility="public" />
+      <field name="Query" type="TQuery" visibility="public" />
+      <constructor name="Create" visibility="public">
+        <parameters>
+        </parameters>
+      </constructor>
+      <destructor name="Destroy" visibility="public">
+        <parameters>
+        </parameters>
+      </destructor>
+      <function name="LoadItemsDB" visibility="public">
+        <parameters>
+          <retval type="Integer" />
+        </parameters>
+      </function>
+      <function name="LoadFromItemsDB" visibility="public">
+        <parameters>
+          <retval type="Integer" />
+        </parameters>
+      </function>
+      <function name="GetStdItemName" visibility="public">
+        <parameters>
+          <parameter name="nItemIdx" type="Integer" />
+          <retval type="string" />
+        </parameters>
+      </function>
+      <function name="GetStdItem" visibility="public">
+        <parameters>
+          <parameter name="nItemIdx" type="Integer" />
+          <retval type="pTStdItem" />
+        </parameters>
+      </function>
+    </members>
+  </class>
+  <variable name="g_LocalDBE" type="TLocalDB" />
+  <variable name="m_StdItemList" type="TList" />
+  <variable name="m_MagicList" type="TList" />
+  <variable name="ProcessDBCriticalSection" type="_RTL_CRITICAL_SECTION" />
+  <procedure name="ReIniFileGuildName" visibility="public">
+    <parameters>
+      <parameter name="f" type="string" />
+      <parameter name="o" type="string" />
+      <parameter name="n" type="string" />
+    </parameters>
+  </procedure>
+</namespace>

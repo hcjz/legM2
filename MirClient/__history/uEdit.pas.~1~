@@ -1,0 +1,1751 @@
+unit uEdit;
+
+interface
+uses
+  Windows, Classes, Graphics, SysUtils, Controls, StdCtrls, Messages, Forms,
+  DIB, Grids, HUtil32, WIL, HGE, HGECanvas,HGETextures,
+  HGEFont, Clipbrd, Math, DWinCtl;
+
+type
+  TDComboBox = class;
+
+  TDxCustomListBox = class(TDCustomControl)
+  private
+    FItems: TStrings;
+    FBackColor: TColor;
+    FSelectionColor: TColor;
+    FParentComboBox: TDComboBox;
+    function GetItemSelected: Integer;
+    procedure SetItems(Value: TStrings);
+    procedure SetBackColor(Value: TColor);
+    procedure SetSelectionColor(Value: TColor);
+    procedure SetItemSelected(Value: Integer);
+  public
+    ChangingHero: Boolean;
+    FSelected: Integer;
+    FOnChangeSelect: procedure(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer) of object;
+    FOnMouseMoveSelect: procedure(Sender: TObject; Shift: TShiftState; X, Y: Integer) of object;
+    property Items: TStrings read FItems write SetItems;
+    property BackColor: TColor read FBackColor write SetBackColor default clWhite;
+    property SelectionColor: TColor read FSelectionColor write SetSelectionColor default clSilver;
+    property ItemSelected: Integer read GetItemSelected write SetItemSelected;
+    property ParentComboBox: TDComboBox read FParentComboBox write FParentComboBox;
+
+    //procedure ChangeSelect(ChangeSelect: Integer);
+    function MouseMove(Shift: TShiftState; X, Y: Integer): Boolean; override;
+    function MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): Boolean; override;
+    function MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): Boolean; override;
+    function KeyDown(var Key: Word; Shift: TShiftState): Boolean; override;
+    constructor Create(aowner: TComponent); override;
+    destructor Destroy; override;
+    procedure DirectPaint(dsurface: TDXTexture); override;
+  end;
+
+  TDListBox = class(TDxCustomListBox)
+  published
+    property Enabled;
+    property Transparent;
+    property BackColor;
+    property SelectionColor;
+    property FrameVisible;
+    property FrameHot;
+    property FrameSize;
+    property FrameColor;
+    property FrameHotColor;
+    property ParentComboBox;
+    property ClickCount: TClickSound read FClickSound write FClickSound;
+    property OnClick: TOnClickEx read FOnClick write FOnClick;
+    property OnClickSound: TOnClickSound read FOnClickSound write FOnClickSound;
+  end;
+
+  TAlignment = (taCenter, taLeftJustify {, taRightJustify});
+
+  TDxCustomEdit = class(TDCustomControl)
+  private
+    FAtom: Word;
+    FHotKey: Cardinal;
+    FIsHotKey: Boolean;
+    FAlignment: TAlignment;
+    FClick: Boolean;
+    FSelClickStart: Boolean;
+    FSelClickEnd: Boolean;
+    FCurPos: Integer;
+    FClickX: Integer;
+    FSelStart: Integer;
+    FSelEnd: Integer;
+    FStartTextX: Integer;
+
+    FSelTextStart: Integer;
+    FSelTextEnd: Integer;
+
+    FMaxLength: Integer;
+    FShowCaretTick: LongWord;
+    FShowCaret: Boolean;
+    FNomberOnly: Boolean;
+    FSecondChineseChar: Boolean;
+    FPasswordChar: Char;
+    FOnTextChanged: TOnTextChanged;
+    procedure SetSelStart(Value: Integer);
+    procedure SetSelEnd(Value: Integer);
+    procedure SetMaxLength(Value: Integer);
+    procedure SetPasswordChar(Value: Char);
+    procedure SetNomberOnly(Value: Boolean);
+    procedure SetAlignment(Value: TAlignment);
+    procedure SetIsHotKey(Value: Boolean);
+    procedure SetHotKey(Value: Cardinal);
+    procedure SetAtom(Value: Word);
+    procedure SetSelLength(Value: Integer);
+    function ReadSelLength(): Integer;
+  protected
+    property Alignment: TAlignment read FAlignment write SetAlignment default taLeftJustify;
+    property NomberOnly: Boolean read FNomberOnly write SetNomberOnly default False;
+    property IsHotKey: Boolean read FIsHotKey write SetIsHotKey default False;
+    property Atom: Word read FAtom write SetAtom default 0;
+    property HotKey: Cardinal read FHotKey write SetHotKey default 0;
+    property MaxLength: Integer read FMaxLength write SetMaxLength default 0;
+    property PasswordChar: Char read FPasswordChar write SetPasswordChar default #0;
+  public
+    DxHint: TDxHint;
+    m_InputHint: string;
+    FMiniCaret: byte;
+    FCaretColor: TColor;
+    procedure ShowCaret();
+    procedure SetFocus(); override;
+    procedure ChangeCurPos(nPos: Integer; boLast: Boolean = False);
+    constructor Create(aowner: TComponent); override;
+    function MouseMove(Shift: TShiftState; X, Y: Integer): Boolean; override;
+    function MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): Boolean; override;
+    function MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): Boolean; override;
+    procedure DirectPaint(dsurface: TDXTexture); override;
+    function KeyPress(var Key: Char): Boolean; override;
+    function KeyPressEx(var Key: Char): Boolean;
+    function KeyDown(var Key: Word; Shift: TShiftState): Boolean; override;
+    function SetOfHotKey(HotKey: Cardinal): Word;
+    property Text: string read FCaption write SetCaption;
+    property SelStart: Integer read FSelStart write SetSelStart;
+    property SelEnd: Integer read FSelEnd write SetSelEnd;
+    property SelLength: Integer read ReadSelLength write SetSelLength;
+    property OnTextChanged: TOnTextChanged read FOnTextChanged write FOnTextChanged;
+    ///
+  end;
+
+  TDxEdit = class(TDxCustomEdit)
+  published
+    property Alignment;
+    property IsHotKey;
+    property HotKey;
+    property Enabled;
+    property MaxLength;
+    property NomberOnly;
+    property Transparent;
+    property PasswordChar;
+    property FrameVisible;
+    property FrameHot;
+    property FrameSize;
+    property FrameColor;
+    property FrameHotColor;
+    property ClickCount: TClickSound read FClickSound write FClickSound;
+    property OnClick: TOnClickEx read FOnClick write FOnClick;
+    property OnClickSound: TOnClickSound read FOnClickSound write FOnClickSound;
+  end;
+
+  TDComboBox = class(TDxCustomEdit)
+  private
+    FDropDownList: TDListBox;
+  protected
+    //
+  public
+    constructor Create(aowner: TComponent); override;
+    function MouseMove(Shift: TShiftState; X, Y: Integer): Boolean; override;
+    function MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): Boolean; override;
+    //function MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): Boolean; override;
+  published
+    property Enabled;
+    property MaxLength;
+    property NomberOnly;
+    property Transparent;
+    property PasswordChar;
+    property FrameVisible;
+    property FrameHot;
+    property FrameSize;
+    property FrameColor;
+    property FrameHotColor;
+    property DropDownList: TDListBox read FDropDownList write FDropDownList;
+    property ClickCount: TClickSound read FClickSound write FClickSound;
+    property OnClick: TOnClickEx read FOnClick write FOnClick;
+    property OnClickSound: TOnClickSound read FOnClickSound write FOnClickSound;
+  end;
+
+var
+  LastMenuControl           : TDxEdit = nil;
+  HotKeyProc : function (HotKey: Cardinal): Boolean of object;
+  
+implementation
+
+uses
+  ClMain, FState;
+
+
+function IsKeyPressed(Key: Byte): Boolean;
+var
+  keyvalue          : TKeyBoardState;
+begin
+  Result := False;
+  FillChar(keyvalue, SizeOf(TKeyBoardState), #0);
+  if GetKeyboardState(keyvalue) then
+    if (keyvalue[Key] and $80) <> 0 then
+      Result := True;
+end;
+
+const
+  // Windows 2000/XP multimedia keys (adapted from winuser.h and renamed to avoid potential conflicts)
+  // See also: http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/WindowsUserInterface/UserInput/VirtualKeyCodes.asp
+  _VK_BROWSER_BACK = $A6; // Browser Back key
+  _VK_BROWSER_FORWARD = $A7; // Browser Forward key
+  _VK_BROWSER_REFRESH = $A8; // Browser Refresh key
+  _VK_BROWSER_STOP = $A9; // Browser Stop key
+  _VK_BROWSER_SEARCH = $AA; // Browser Search key
+  _VK_BROWSER_FAVORITES = $AB; // Browser Favorites key
+  _VK_BROWSER_HOME = $AC; // Browser Start and Home key
+  _VK_VOLUME_MUTE = $AD; // Volume Mute key
+  _VK_VOLUME_DOWN = $AE; // Volume Down key
+  _VK_VOLUME_UP = $AF; // Volume Up key
+  _VK_MEDIA_NEXT_TRACK = $B0; // Next Track key
+  _VK_MEDIA_PREV_TRACK = $B1; // Previous Track key
+  _VK_MEDIA_STOP = $B2; // Stop Media key
+  _VK_MEDIA_PLAY_PAUSE = $B3; // Play/Pause Media key
+  _VK_LAUNCH_MAIL = $B4; // Start Mail key
+  _VK_LAUNCH_MEDIA_SELECT = $B5; // Select Media key
+  _VK_LAUNCH_APP1 = $B6; // Start Application 1 key
+  _VK_LAUNCH_APP2 = $B7; // Start Application 2 key
+  // Self-invented names for the extended keys
+  NAME_VK_BROWSER_BACK = 'Browser Back';
+  NAME_VK_BROWSER_FORWARD = 'Browser Forward';
+  NAME_VK_BROWSER_REFRESH = 'Browser Refresh';
+  NAME_VK_BROWSER_STOP = 'Browser Stop';
+  NAME_VK_BROWSER_SEARCH = 'Browser Search';
+  NAME_VK_BROWSER_FAVORITES = 'Browser Favorites';
+  NAME_VK_BROWSER_HOME = 'Browser Start/Home';
+  NAME_VK_VOLUME_MUTE = 'Volume Mute';
+  NAME_VK_VOLUME_DOWN = 'Volume Down';
+  NAME_VK_VOLUME_UP = 'Volume Up';
+  NAME_VK_MEDIA_NEXT_TRACK = 'Next Track';
+  NAME_VK_MEDIA_PREV_TRACK = 'Previous Track';
+  NAME_VK_MEDIA_STOP = 'Stop Media';
+  NAME_VK_MEDIA_PLAY_PAUSE = 'Play/Pause Media';
+  NAME_VK_LAUNCH_MAIL = 'Start Mail';
+  NAME_VK_LAUNCH_MEDIA_SELECT = 'Select Media';
+  NAME_VK_LAUNCH_APP1 = 'Start Application 1';
+  NAME_VK_LAUNCH_APP2 = 'Start Application 2';
+
+const
+  mmsyst = 'winmm.dll';
+  kernel32 = 'kernel32.dll';
+  HotKeyAtomPrefix = 'HotKeyManagerHotKey';
+  ModName_Shift = 'Shift';
+  ModName_Ctrl = 'Ctrl';
+  ModName_Alt = 'Alt';
+  ModName_Win = 'Win';
+  VK2_SHIFT = 32;
+  VK2_CONTROL = 64;
+  VK2_ALT = 128;
+  VK2_WIN = 256;
+
+var
+  EnglishKeyboardLayout: HKL;
+  ShouldUnloadEnglishKeyboardLayout: Boolean;
+  LocalModName_Shift: string = ModName_Shift;
+  LocalModName_Ctrl: string = ModName_Ctrl;
+  LocalModName_Alt: string = ModName_Alt;
+  LocalModName_Win: string = ModName_Win;
+
+function IsExtendedKey(Key: Word): Boolean;
+begin
+  Result := ((Key >= _VK_BROWSER_BACK) and (Key <= _VK_LAUNCH_APP2));
+end;
+
+function GetHotKey(Modifiers, Key: Word): Cardinal;
+var
+  HK: Cardinal;
+begin
+  HK := 0;
+  if (Modifiers and MOD_ALT) <> 0 then
+    Inc(HK, VK2_ALT);
+  if (Modifiers and MOD_CONTROL) <> 0 then
+    Inc(HK, VK2_CONTROL);
+  if (Modifiers and MOD_SHIFT) <> 0 then
+    Inc(HK, VK2_SHIFT);
+  if (Modifiers and MOD_WIN) <> 0 then
+    Inc(HK, VK2_WIN);
+  HK := HK shl 8;
+  Inc(HK, Key);
+  Result := HK;
+end;
+
+
+procedure SeparateHotKey(HotKey: Cardinal; var Modifiers, Key: Word);
+var
+  Virtuals: Integer;
+  v: Word;
+  X: Word;
+begin
+  Key := Byte(HotKey);
+  X := HotKey shr 8;
+  Virtuals := X;
+  v := 0;
+  if (Virtuals and VK2_WIN) <> 0 then
+    Inc(v, MOD_WIN);
+  if (Virtuals and VK2_ALT) <> 0 then
+    Inc(v, MOD_ALT);
+  if (Virtuals and VK2_CONTROL) <> 0 then
+    Inc(v, MOD_CONTROL);
+  if (Virtuals and VK2_SHIFT) <> 0 then
+    Inc(v, MOD_SHIFT);
+  Modifiers := v;
+end;
+
+function HotKeyToText(HotKey: Cardinal; Localized: Boolean): string;
+
+  function GetExtendedVKName(Key: Word): string;
+  begin
+    case Key of
+      _VK_BROWSER_BACK: Result := NAME_VK_BROWSER_BACK;
+      _VK_BROWSER_FORWARD: Result := NAME_VK_BROWSER_FORWARD;
+      _VK_BROWSER_REFRESH: Result := NAME_VK_BROWSER_REFRESH;
+      _VK_BROWSER_STOP: Result := NAME_VK_BROWSER_STOP;
+      _VK_BROWSER_SEARCH: Result := NAME_VK_BROWSER_SEARCH;
+      _VK_BROWSER_FAVORITES: Result := NAME_VK_BROWSER_FAVORITES;
+      _VK_BROWSER_HOME: Result := NAME_VK_BROWSER_HOME;
+      _VK_VOLUME_MUTE: Result := NAME_VK_VOLUME_MUTE;
+      _VK_VOLUME_DOWN: Result := NAME_VK_VOLUME_DOWN;
+      _VK_VOLUME_UP: Result := NAME_VK_VOLUME_UP;
+      _VK_MEDIA_NEXT_TRACK: Result := NAME_VK_MEDIA_NEXT_TRACK;
+      _VK_MEDIA_PREV_TRACK: Result := NAME_VK_MEDIA_PREV_TRACK;
+      _VK_MEDIA_STOP: Result := NAME_VK_MEDIA_STOP;
+      _VK_MEDIA_PLAY_PAUSE: Result := NAME_VK_MEDIA_PLAY_PAUSE;
+      _VK_LAUNCH_MAIL: Result := NAME_VK_LAUNCH_MAIL;
+      _VK_LAUNCH_MEDIA_SELECT: Result := NAME_VK_LAUNCH_MEDIA_SELECT;
+      _VK_LAUNCH_APP1: Result := NAME_VK_LAUNCH_APP1;
+      _VK_LAUNCH_APP2: Result := NAME_VK_LAUNCH_APP2;
+    else
+      Result := '';
+    end;
+  end;
+
+  function GetModifierNames: string;
+  var
+    s: string;
+  begin
+    s := '';
+    if Localized then begin
+      if (HotKey and $4000) <> 0 then // scCtrl
+        s := s + LocalModName_Ctrl + '+';
+      if (HotKey and $2000) <> 0 then // scShift
+        s := s + LocalModName_Shift + '+';
+      if (HotKey and $8000) <> 0 then // scAlt
+        s := s + LocalModName_Alt + '+';
+      if (HotKey and $10000) <> 0 then
+        s := s + LocalModName_Win + '+';
+    end
+    else begin
+      if (HotKey and $4000) <> 0 then // scCtrl
+        s := s + ModName_Ctrl + '+';
+      if (HotKey and $2000) <> 0 then // scShift
+        s := s + ModName_Shift + '+';
+      if (HotKey and $8000) <> 0 then // scAlt
+        s := s + ModName_Alt + '+';
+      if (HotKey and $10000) <> 0 then
+        s := s + ModName_Win + '+';
+    end;
+    Result := s;
+  end;
+
+  function GetVKName(Special: Boolean): string;
+  var
+    scanCode: Cardinal;
+    KeyName: array[0..255] of Char;
+    oldkl: HKL;
+    Modifiers, Key: Word;
+  begin
+    Result := '';
+    if Localized then {// Local language key names}  begin
+      if Special then
+        scanCode := (MapVirtualKey(Byte(HotKey), 0) shl 16) or (1 shl 24)
+      else
+        scanCode := (MapVirtualKey(Byte(HotKey), 0) shl 16);
+      if scanCode <> 0 then begin
+        GetKeyNameText(scanCode, KeyName, SizeOf(KeyName));
+        Result := KeyName;
+      end;
+    end
+    else {// English key names}  begin
+      if Special then
+        scanCode := (MapVirtualKeyEx(Byte(HotKey), 0, EnglishKeyboardLayout) shl 16) or (1 shl 24)
+      else
+        scanCode := (MapVirtualKeyEx(Byte(HotKey), 0, EnglishKeyboardLayout) shl 16);
+      if scanCode <> 0 then begin
+        oldkl := GetKeyboardLayout(0);
+        if oldkl <> EnglishKeyboardLayout then
+          ActivateKeyboardLayout(EnglishKeyboardLayout, 0); // Set English kbd. layout
+        GetKeyNameText(scanCode, KeyName, SizeOf(KeyName));
+        Result := KeyName;
+        if oldkl <> EnglishKeyboardLayout then begin
+          if ShouldUnloadEnglishKeyboardLayout then
+            UnloadKeyboardLayout(EnglishKeyboardLayout); // Restore prev. kbd. layout
+          ActivateKeyboardLayout(oldkl, 0);
+        end;
+      end;
+    end;
+
+    if Length(Result) <= 1 then begin
+      // Try the internally defined names
+      SeparateHotKey(HotKey, Modifiers, Key);
+      if IsExtendedKey(Key) then
+        Result := GetExtendedVKName(Key);
+    end;
+  end;
+
+var
+  KeyName: string;
+begin
+  case Byte(HotKey) of
+    // PgUp, PgDn, End, Home, Left, Up, Right, Down, Ins, Del
+    $21..$28, $2D, $2E: KeyName := GetVKName(True);
+  else
+    KeyName := GetVKName(False);
+  end;
+  Result := GetModifierNames + KeyName;
+end;
+
+{--------------------- TDxCustomEdit --------------------------}
+
+constructor TDxCustomEdit.Create(aowner: TComponent);
+begin
+  inherited Create(aowner);
+  Downed := False;
+  FMiniCaret := 0;
+  m_InputHint := '';
+  DxHint := nil;
+  FCaretColor := clWhite;
+  FOnClick := nil;
+  FEnableFocus := True;
+  FClick := False;
+  FSelClickStart := False;
+  FSelClickEnd := False;
+  FClickX := 0;
+  FSelStart := -1;
+  FSelEnd := -1;
+  FStartTextX := 0;
+  FSelTextStart := 0;
+  FSelTextEnd := 0;
+  FCurPos := 0;
+  FClickSound := csNone;
+  FShowCaret := True;
+  FNomberOnly := False;
+  FIsHotKey := False;
+  FHotKey := 0;
+  FTransparent := True;
+  FEnabled := True;
+  FSecondChineseChar := False;
+  FShowCaretTick := GetTickCount;
+  FFrameVisible := True;
+  FFrameHot := False;
+  FFrameSize := 1;
+  FFrameColor := $00406F77;
+  FFrameHotColor := $00599AA8;
+  FAlignment := taLeftJustify;
+  FRightClick := True;
+  //OnMouseUp := frmDlg.DxEditLoginIDMouseUp;
+end;
+
+procedure TDxCustomEdit.SetSelLength(Value: Integer);
+begin
+  SetSelStart(Value - 1);
+  SetSelEnd(Value - 1);
+end;
+
+function TDxCustomEdit.ReadSelLength(): Integer;
+begin
+  Result := abs(FSelStart - FSelEnd);
+end;
+
+procedure TDxCustomEdit.SetSelStart(Value: Integer);
+begin
+  if FSelStart <> Value then
+    FSelStart := Value;
+end;
+
+procedure TDxCustomEdit.SetSelEnd(Value: Integer);
+begin
+  if FSelEnd <> Value then
+    FSelEnd := Value;
+end;
+
+procedure TDxCustomEdit.SetMaxLength(Value: Integer);
+begin
+  if FMaxLength <> Value then
+    FMaxLength := Value;
+end;
+
+procedure TDxCustomEdit.SetPasswordChar(Value: Char);
+begin
+  if FPasswordChar <> Value then
+    FPasswordChar := Value;
+end;
+
+procedure TDxCustomEdit.SetNomberOnly(Value: Boolean);
+begin
+  if FNomberOnly <> Value then
+    FNomberOnly := Value;
+end;
+
+procedure TDxCustomEdit.SetIsHotKey(Value: Boolean);
+begin
+  if FIsHotKey <> Value then
+    FIsHotKey := Value;
+end;
+
+procedure TDxCustomEdit.SetHotKey(Value: Cardinal);
+begin
+  if FHotKey <> Value then
+    FHotKey := Value;
+end;
+
+procedure TDxCustomEdit.SetAtom(Value: Word);
+begin
+  if FAtom <> Value then
+    FAtom := Value;
+end;
+
+procedure TDxCustomEdit.SetAlignment(Value: TAlignment);
+begin
+  if FAlignment <> Value then
+    FAlignment := Value;
+end;
+
+procedure TDxCustomEdit.ShowCaret();
+begin
+  FShowCaret := True;
+  FShowCaretTick := GetTickCount;
+end;
+
+procedure TDxCustomEdit.SetFocus();
+begin
+  SetDFocus(self);
+end;
+
+procedure TDxCustomEdit.ChangeCurPos(nPos: Integer; boLast: Boolean = False);
+begin
+  if Caption = '' then Exit;
+
+  if boLast then begin
+    FCurPos := Length(Caption);
+    Exit;
+  end;
+
+  if nPos = 1 then begin                //Right ->
+    case ByteType(Caption, FCurPos + 1) of
+      mbSingleByte: nPos := 1;
+      mbLeadByte: nPos := 2;            //汉字的第一个字节
+      mbTrailByte: nPos := 2;           //汉字的第二个字节
+    end;
+  end else begin                        //Left <-
+    case ByteType(Caption, FCurPos) of
+      mbSingleByte: nPos := -1;
+      mbLeadByte: nPos := -2;
+      mbTrailByte: nPos := -2;
+    end;
+  end;
+
+  if ((FCurPos + nPos) <= Length(Caption)) then begin
+    if ((FCurPos + nPos) >= 0) then
+      FCurPos := FCurPos + nPos;
+  end;
+
+  {if nPos = 1 then begin
+    if ((FCurPos + 1) <= Length(Caption)) and (Caption[FCurPos + 1] > #$80) then
+      nPos := 2
+  end else begin
+    if ((FCurPos + 0) <= Length(Caption)) and (Caption[FCurPos + 0] > #$80) then
+      nPos := -2;
+  end;
+
+  if ((FCurPos + nPos) <= Length(Caption)) then begin
+    if ((FCurPos + nPos) >= 0) then
+      FCurPos := FCurPos + nPos;
+  end;}
+
+  if FSelClickStart then begin
+    FSelClickStart := False;
+    FSelStart := FCurPos;
+  end;
+  if FSelClickEnd then begin
+    FSelClickEnd := False;
+    FSelEnd := FCurPos;
+  end;
+end;
+
+function TDxCustomEdit.KeyPress(var Key: Char): Boolean;
+var
+  s, cStr                   : string;
+  i, nlen, cpLen            : Integer;
+  pStart                    : Integer;
+  pEnd                      : Integer;
+begin
+  if not FEnabled or FIsHotKey then Exit;
+  if not self.Visible then Exit;
+  if (self.DParent = nil) or (not self.DParent.Visible) then Exit;
+  s := Caption;
+  try
+    if (Ord(Key) in [VK_RETURN, VK_ESCAPE]) then begin
+      Result := inherited KeyPress(Key);
+      Exit;
+    end;
+    if not FNomberOnly and IsKeyPressed(VK_CONTROL) and (Ord(Key) in [1..27]) then begin
+      //MessageBox(0, PChar(IntToStr(Ord(Key))), '', mb_ok);
+      if (Ord(Key) = 22) then begin     //CTRL + V
+        if (FSelStart > -1) and (FSelEnd > -1) and (FSelStart <> FSelEnd) then begin
+          if FSelStart > FSelEnd then begin
+            pStart := FSelEnd;
+            pEnd := FSelStart;
+          end;
+          if FSelStart < FSelEnd then begin
+            pStart := FSelStart;
+            pEnd := FSelEnd;
+          end;
+          cStr := Clipboard.AsText;
+          if cStr <> '' then begin
+            cpLen := FMaxLength - Length(Caption) + abs(FSelStart - FSelEnd);
+            FSelStart := -1;
+            FSelEnd := -1;
+            Caption := Copy(Caption, 1, pStart) + Copy(Caption, pEnd + 1, Length(Caption));
+            FCurPos := pStart;
+
+            nlen := Length(cStr);
+            if nlen < cpLen then cpLen := nlen;
+            Caption := Copy(Caption, 1, FCurPos) + Copy(cStr, 1, cpLen) + Copy(Caption, FCurPos + 1, Length(Caption));
+            Inc(FCurPos, cpLen);
+
+          end;
+        end else begin
+          cpLen := FMaxLength - Length(Caption);
+          if cpLen > 0 then begin
+            cStr := Clipboard.AsText;
+            if cStr <> '' then begin
+              nlen := Length(cStr);
+              if nlen < cpLen then cpLen := nlen;
+              Caption := Copy(Caption, 1, FCurPos) + Copy(cStr, 1, cpLen) + Copy(Caption, FCurPos + 1, Length(Caption));
+              Inc(FCurPos, cpLen);
+            end;
+          end else Beep;
+        end;
+      end;
+
+      if (Ord(Key) = 3) and (FPasswordChar = #0) and (Caption <> '') then begin //CTRL + C
+        if (FSelStart > -1) and (FSelEnd > -1) and (FSelStart <> FSelEnd) then begin
+          if FSelStart > FSelEnd then begin
+            pStart := FSelEnd;
+            pEnd := FSelStart;
+          end;
+          if FSelStart < FSelEnd then begin
+            pStart := FSelStart;
+            pEnd := FSelEnd;
+          end;
+          cStr := Copy(Caption, pStart + 1, abs(FSelStart - FSelEnd));
+          if cStr <> '' then begin
+            Clipboard.AsText := cStr;
+          end;
+        end;
+      end;
+
+      if (Ord(Key) = 24) and (FPasswordChar = #0) and (Caption <> '') then begin //CTRL + X
+        if (FSelStart > -1) and (FSelEnd > -1) and (FSelStart <> FSelEnd) then begin
+          if FSelStart > FSelEnd then begin
+            pStart := FSelEnd;
+            pEnd := FSelStart;
+          end;
+          if FSelStart < FSelEnd then begin
+            pStart := FSelStart;
+            pEnd := FSelEnd;
+          end;
+          cStr := Copy(Caption, pStart + 1, abs(FSelStart - FSelEnd));
+          if cStr <> '' then begin
+            Clipboard.AsText := cStr;
+          end;
+          FSelStart := -1;
+          FSelEnd := -1;
+          Caption := Copy(Caption, 1, pStart) + Copy(Caption, pEnd + 1, Length(Caption));
+          FCurPos := pStart;
+        end;
+      end;
+
+      if (Ord(Key) = 1) and not FIsHotKey and (Caption <> '') then begin //CTRL + A
+        FSelStart := 0;
+        FSelEnd := Length(Caption);
+        FCurPos := FSelEnd;
+      end;
+
+      Result := inherited KeyPress(Key);
+      Exit;
+    end;
+
+    Result := inherited KeyPress(Key);
+    if Result then begin
+      ShowCaret();
+      case Ord(Key) of
+        VK_BACK: begin
+            if (FSelStart > -1) and (FSelEnd > -1) and (FSelStart <> FSelEnd) then begin
+              if FSelStart > FSelEnd then begin
+                pStart := FSelEnd;
+                pEnd := FSelStart;
+              end;
+              if FSelStart < FSelEnd then begin
+                pStart := FSelStart;
+                pEnd := FSelEnd;
+              end;
+              FSelStart := -1;
+              FSelEnd := -1;
+              Caption := Copy(Caption, 1, pStart) + Copy(Caption, pEnd + 1, Length(Caption));
+              FCurPos := pStart;
+            end else begin
+              if (FCurPos > 0) then begin
+                nlen := 1;
+                case ByteType(Caption, FCurPos) of
+                  mbSingleByte: nlen := 1;
+                  mbLeadByte: nlen := 2;
+                  mbTrailByte: nlen := 2;
+                end;
+                Caption := Copy(Caption, 1, FCurPos - nlen) + Copy(Caption, FCurPos + 1, Length(Caption));
+                Dec(FCurPos, nlen);
+
+                {if (FCurPos >= 2) and (Caption[FCurPos] > #$80) and (Caption[FCurPos - 1] > #$80) then begin
+                  Caption := Copy(Caption, 1, FCurPos - 2) + Copy(Caption, FCurPos + 1, Length(Caption));
+                  Dec(FCurPos, 2);
+                end else begin
+                  Caption := Copy(Caption, 1, FCurPos - 1) + Copy(Caption, FCurPos + 1, Length(Caption));
+                  Dec(FCurPos);
+                end;}
+              end;
+            end;
+          end;
+      else begin
+          if (FMaxLength <= 0) or (FMaxLength > MaxChar) then FMaxLength := MaxChar;
+          if (FSelStart > -1) and (FSelEnd > -1) and (FSelStart <> FSelEnd) then begin
+            if FSelStart > FSelEnd then begin
+              pStart := FSelEnd;
+              pEnd := FSelStart;
+            end;
+            if FSelStart < FSelEnd then begin
+              pStart := FSelStart;
+              pEnd := FSelEnd;
+            end;
+            if FNomberOnly then begin
+              if (Key >= #$30) and (Key <= #$39) then begin
+                FSelStart := -1;
+                FSelEnd := -1;
+                Caption := Copy(Caption, 1, pStart) + Copy(Caption, pEnd + 1, Length(Caption));
+                FCurPos := pStart;
+                FSecondChineseChar := False;
+                if Length(Caption) < FMaxLength then begin
+                  Caption := Copy(Caption, 1, FCurPos) + Key + Copy(Caption, FCurPos + 1, Length(Caption));
+                  Inc(FCurPos);
+                end else Beep;
+              end else
+                Beep;
+            end else begin
+              FSelStart := -1;
+              FSelEnd := -1;
+              Caption := Copy(Caption, 1, pStart) + Copy(Caption, pEnd + 1, Length(Caption));
+              FCurPos := pStart;
+              if Key > #$80 then begin
+                if FSecondChineseChar then begin
+                  FSecondChineseChar := False;
+                  if Length(Caption) < FMaxLength then begin
+                    Caption := Copy(Caption, 1, FCurPos) + Key + Copy(Caption, FCurPos + 1, Length(Caption));
+                    Inc(FCurPos);
+                  end else Beep;
+                end else begin
+                  if Length(Caption) + 1 < FMaxLength then begin
+                    FSecondChineseChar := True;
+                    Caption := Copy(Caption, 1, FCurPos) + Key + Copy(Caption, FCurPos + 1, Length(Caption));
+                    Inc(FCurPos);
+                  end else Beep;
+                end;
+              end else begin
+                FSecondChineseChar := False;
+                if Length(Caption) < FMaxLength then begin
+                  Caption := Copy(Caption, 1, FCurPos) + Key + Copy(Caption, FCurPos + 1, Length(Caption));
+                  Inc(FCurPos);
+                end else Beep;
+              end;
+            end;
+          end else begin
+            if FNomberOnly then begin
+              if (Key >= #$30) and (Key <= #$39) then begin
+                FSelStart := -1;
+                FSelEnd := -1;
+                FSecondChineseChar := False;
+                if Length(Caption) < FMaxLength then begin
+                  Caption := Copy(Caption, 1, FCurPos) + Key + Copy(Caption, FCurPos + 1, Length(Caption));
+                  Inc(FCurPos);
+                end;
+              end else
+                Beep;
+            end else begin
+              FSelStart := -1;
+              FSelEnd := -1;
+              if Key > #$80 then begin
+                if FSecondChineseChar then begin
+                  FSecondChineseChar := False;
+                  if Length(Caption) < FMaxLength then begin
+                    Caption := Copy(Caption, 1, FCurPos) + Key + Copy(Caption, FCurPos + 1, Length(Caption));
+                    Inc(FCurPos);
+                    FSelStart := FCurPos;
+                  end else Beep;
+                end else begin
+                  if Length(Caption) + 1 < FMaxLength then begin
+                    FSecondChineseChar := True;
+                    Caption := Copy(Caption, 1, FCurPos) + Key + Copy(Caption, FCurPos + 1, Length(Caption));
+                    Inc(FCurPos);
+                    FSelStart := FCurPos;
+                  end else Beep;
+                end;
+              end else begin
+                FSecondChineseChar := False;
+                if Length(Caption) < FMaxLength then begin
+                  Caption := Copy(Caption, 1, FCurPos) + Key + Copy(Caption, FCurPos + 1, Length(Caption));
+                  Inc(FCurPos);
+                  FSelStart := FCurPos;
+                end else Beep;
+              end;
+            end;
+          end;
+        end;
+      end;
+    end;
+  finally
+    if s <> Caption then begin
+      if Assigned(FOnTextChanged) then FOnTextChanged(self, Caption);
+    end;
+  end;
+end;
+
+function TDxCustomEdit.KeyPressEx(var Key: Char): Boolean;
+var
+  s, cStr                   : string;
+  i, nlen, cpLen            : Integer;
+  pStart                    : Integer;
+  pEnd                      : Integer;
+begin
+  if not FEnabled or FIsHotKey then Exit;
+  if not self.Visible then Exit;
+  if (self.DParent = nil) or (not self.DParent.Visible) then Exit;
+
+  s := Caption;
+  try
+    if not FNomberOnly and (Ord(Key) in [1..27]) then begin
+      if (Ord(Key) = 22) then begin     //CTRL + V
+        if (FSelStart > -1) and (FSelEnd > -1) and (FSelStart <> FSelEnd) then begin
+          if FSelStart > FSelEnd then begin
+            pStart := FSelEnd;
+            pEnd := FSelStart;
+          end;
+          if FSelStart < FSelEnd then begin
+            pStart := FSelStart;
+            pEnd := FSelEnd;
+          end;
+          cStr := Clipboard.AsText;
+          if cStr <> '' then begin
+            cpLen := FMaxLength - Length(Caption) + abs(FSelStart - FSelEnd);
+            FSelStart := -1;
+            FSelEnd := -1;
+            Caption := Copy(Caption, 1, pStart) + Copy(Caption, pEnd + 1, Length(Caption));
+            FCurPos := pStart;
+
+            nlen := Length(cStr);
+            if nlen < cpLen then cpLen := nlen;
+            Caption := Copy(Caption, 1, FCurPos) + Copy(cStr, 1, cpLen) + Copy(Caption, FCurPos + 1, Length(Caption));
+            Inc(FCurPos, cpLen);
+          end;
+        end else begin
+          cpLen := FMaxLength - Length(Caption);
+          if cpLen > 0 then begin
+            cStr := Clipboard.AsText;
+            if cStr <> '' then begin
+              nlen := Length(cStr);
+              if nlen < cpLen then cpLen := nlen;
+              Caption := Copy(Caption, 1, FCurPos) + Copy(cStr, 1, cpLen) + Copy(Caption, FCurPos + 1, Length(Caption));
+              Inc(FCurPos, cpLen);
+            end;
+          end else Beep;
+        end;
+      end;
+
+      if (Ord(Key) = 3) and (FPasswordChar = #0) and (Caption <> '') then begin //CTRL + C
+        if (FSelStart > -1) and (FSelEnd > -1) and (FSelStart <> FSelEnd) then begin
+          if FSelStart > FSelEnd then begin
+            pStart := FSelEnd;
+            pEnd := FSelStart;
+          end;
+          if FSelStart < FSelEnd then begin
+            pStart := FSelStart;
+            pEnd := FSelEnd;
+          end;
+          cStr := Copy(Caption, pStart + 1, abs(FSelStart - FSelEnd));
+          if cStr <> '' then begin
+            Clipboard.AsText := cStr;
+          end;
+        end;
+      end;
+
+      if (Ord(Key) = 24) and (FPasswordChar = #0) and (Caption <> '') then begin //CTRL + X
+        if (FSelStart > -1) and (FSelEnd > -1) and (FSelStart <> FSelEnd) then begin
+          if FSelStart > FSelEnd then begin
+            pStart := FSelEnd;
+            pEnd := FSelStart;
+          end;
+          if FSelStart < FSelEnd then begin
+            pStart := FSelStart;
+            pEnd := FSelEnd;
+          end;
+          cStr := Copy(Caption, pStart + 1, abs(FSelStart - FSelEnd));
+          if cStr <> '' then begin
+            Clipboard.AsText := cStr;
+          end;
+          FSelStart := -1;
+          FSelEnd := -1;
+          Caption := Copy(Caption, 1, pStart) + Copy(Caption, pEnd + 1, Length(Caption));
+          FCurPos := pStart;
+        end;
+      end;
+
+      if (Ord(Key) = 1) and not FIsHotKey and (Caption <> '') then begin //CTRL + A
+        FSelStart := 0;
+        FSelEnd := Length(Caption);
+        FCurPos := FSelEnd;
+      end;
+
+      if (Ord(Key) = VK_BACK) and not FIsHotKey and (Caption <> '') then begin //CTRL + A
+        if (FSelStart > -1) and (FSelEnd > -1) and (FSelStart <> FSelEnd) then begin
+          if FSelStart > FSelEnd then begin
+            pStart := FSelEnd;
+            pEnd := FSelStart;
+          end;
+          if FSelStart < FSelEnd then begin
+            pStart := FSelStart;
+            pEnd := FSelEnd;
+          end;
+          FSelStart := -1;
+          FSelEnd := -1;
+          Caption := Copy(Caption, 1, pStart) + Copy(Caption, pEnd + 1, Length(Caption));
+          FCurPos := pStart;
+        end;
+      end;
+    end;
+  finally
+    if s <> Caption then begin
+      if Assigned(FOnTextChanged) then FOnTextChanged(self, Caption);
+    end;
+  end;
+end;
+
+//const
+//  HotKeyAtomPrefix          = 'Blue_HotKey';
+
+function TDxCustomEdit.SetOfHotKey(HotKey: Cardinal): Word;
+var
+  Modifiers, Key            : Word;
+  Atom                      : Word;
+begin
+  Result := 0;
+  if (HotKey <> 0) and not frmMain.IsRegisteredHotKey(HotKey) then begin
+    if FAtom <> 0 then begin
+      UnregisterHotKey(g_MainHWnd, FAtom);
+      GlobalDeleteAtom(FAtom);
+    end;
+    Result := 0;
+    FHotKey := HotKey;
+    Caption := HotKeyToText(HotKey, True);
+  end;
+end;
+
+function TDxCustomEdit.KeyDown(var Key: Word; Shift: TShiftState): Boolean;
+var
+  pStart, pEnd              : Integer;
+  M                         : Word;
+  HK                        : Cardinal;
+  ret {, IsRegistered}      : Boolean;
+  s, tmpStr                 : string;
+begin
+  if not FEnabled then Exit;
+  s := Caption;
+  try
+    ret := inherited KeyDown(Key, Shift);
+    if ret then begin
+      if FIsHotKey then begin
+        if Key in [VK_BACK, VK_DELETE] then begin
+          if (FHotKey <> 0) then begin
+            FHotKey := 0;
+            FAtom := 0;
+          end;
+          Caption := '';
+          Exit;
+        end;
+        if (Key = VK_TAB) or (Char(Key) in ['A'..'Z', 'a'..'z']) then begin
+          M := 0;
+          if ssCtrl in Shift then M := M or MOD_CONTROL;
+          if ssAlt in Shift then M := M or MOD_ALT;
+          if ssShift in Shift then M := M or MOD_SHIFT;
+          HK := GetHotKey(M, Key);
+          if (HK <> 0) and (FHotKey <> 0) then begin
+            FAtom := 0;
+            FHotKey := 0;
+            Caption := '';
+          end;
+          if (HK <> 0) then SetOfHotKey(HK);
+        end;
+      end else begin
+
+        if (Char(Key) in ['0'..'9', 'A'..'Z', 'a'..'z']) then
+          ShowCaret();
+
+        if ssShift in Shift then begin
+          case Key of
+            VK_RIGHT: begin
+                FSelClickEnd := True;
+                ChangeCurPos(1);
+              end;
+            VK_LEFT: begin
+                FSelClickEnd := True;
+                ChangeCurPos(-1);
+              end;
+            VK_HOME: begin
+                FSelEnd := FCurPos;
+                FSelStart := 0;
+              end;
+            VK_END: begin
+                FSelStart := FCurPos;
+                FSelEnd := Length(Text);
+              end;
+          end;
+        end else begin
+          case Key of
+            VK_LEFT: begin
+                FSelStart := -1;
+                FSelEnd := -1;
+                FSelClickStart := True;
+                ChangeCurPos(-1);
+              end;
+            VK_RIGHT: begin
+                FSelStart := -1;
+                FSelEnd := -1;
+                FSelClickStart := True;
+                ChangeCurPos(1);
+              end;
+            VK_HOME: begin
+                FSelStart := -1;
+                FSelEnd := -1;
+                FCurPos := 0;
+                FSelClickStart := True;
+              end;
+            VK_END: begin
+                FSelStart := -1;
+                FSelEnd := -1;
+                FCurPos := Length(Text);
+                FSelClickStart := True;
+              end;
+            VK_DELETE: begin
+                if (FSelStart > -1) and (FSelEnd > -1) and (FSelStart <> FSelEnd) then begin
+                  if FSelStart > FSelEnd then begin
+                    pStart := FSelEnd;
+                    pEnd := FSelStart;
+                  end;
+                  if FSelStart < FSelEnd then begin
+                    pStart := FSelStart;
+                    pEnd := FSelEnd;
+                  end;
+                  FSelStart := -1;
+                  FSelEnd := -1;
+                  Caption := Copy(Caption, 1, pStart) + Copy(Caption, pEnd + 1, Length(Caption));
+                  FCurPos := pStart;
+                end else begin
+                  if FCurPos < Length(Caption) then begin
+                    pEnd := 1;
+                    case ByteType(Caption, FCurPos + 1) of
+                      mbSingleByte: pEnd := 1;
+                      mbLeadByte: pEnd := 2; //汉字的第一个字节
+                      mbTrailByte: pEnd := 2; //汉字的第二个字节
+                    end;
+                    Caption := Copy(Caption, 1, FCurPos) + Copy(Caption, FCurPos + pEnd + 1, Length(Caption));
+
+                    {if (FCurPos < Length(Caption) - 1) and (Caption[FCurPos + 1] > #$80) then
+                      Caption := Copy(Caption, 1, FCurPos) + Copy(Caption, FCurPos + 3, Length(Caption))
+                    else
+                      Caption := Copy(Caption, 1, FCurPos) + Copy(Caption, FCurPos + 2, Length(Caption));}
+                  end;
+                end;
+              end;
+          end;
+        end;
+      end;
+    end;
+    Result := ret;
+  finally
+    if s <> Caption then begin
+      if Assigned(FOnTextChanged) then FOnTextChanged(self, Caption);
+    end;
+  end;
+end;
+
+procedure TDxCustomEdit.DirectPaint(dsurface: TDXTexture);
+var
+  bFocused, bIsChinese      : Boolean;
+  i, oCSize, WidthX,
+    nl, nr, nt              : Integer;
+  tmpword                   : string[255];
+  tmpColor, OldColor, OldBColor: TColor;
+  ob, op, ofc, oFColor,FontColor,BrushColor      : TColor;
+  OldFont                   : TFont;
+  off, ss, se, cPos         : Integer;
+begin
+  if not Visible then Exit;
+  nl := SurfaceX(Left);
+  //nr := SurfaceX(Left + Width);
+  nt := SurfaceY(Top);
+
+  if (FocusedControl <> self) and (DxHint <> nil) then
+    DxHint.Visible := False;
+
+  if FEnabled and not FIsHotKey then begin
+    if GetTickCount - FShowCaretTick >= 400 then begin
+      FShowCaretTick := GetTickCount;
+      FShowCaret := not FShowCaret;
+    end;
+    if (FCurPos > Length(Caption)) then
+      FCurPos := Length(Caption);
+  end;
+
+  if (FPasswordChar <> #0) and not FIsHotKey then begin
+    tmpword := '';
+    for i := 1 to Length(Caption) do
+      if Caption[i] <> FPasswordChar then
+        tmpword := tmpword + FPasswordChar;
+  end else
+    tmpword := Caption;
+
+  op := MainForm.Canvas.Pen.Color;
+  ob := MainForm.Canvas.Brush.Color;
+  ofc := MainForm.Canvas.Font.Color;
+  oCSize := MainForm.Canvas.Font.Size;
+  with g_DXCanvas do begin
+    MainForm.Canvas.Font.Size := self.Font.Size;
+
+    if FEnabled or (self is TDComboBox) then begin
+      FontColor := self.Font.Color;
+      BrushColor := self.Color;
+    end else begin
+      FontColor := self.Font.Color;
+      BrushColor := clGray;
+    end;
+
+    if not FIsHotKey and FEnabled and FClick then begin
+      FClick := False;
+
+      if (FClickX < 0) then
+        FClickX := 0;
+      se := TextWidth(tmpword);
+      if FClickX > se then
+        FClickX := se;
+
+      cPos := FClickX div 6;
+      case ByteType(tmpword, cPos + 1) of
+        mbSingleByte: FCurPos := cPos;
+        mbLeadByte: begin               //双字节字符的首字符
+            FCurPos := cPos;
+          end;
+        mbTrailByte: begin              //多字节字符首字节之后的字符
+            if cPos mod 2 = 0 then begin
+              if FClickX mod 6 in [3..5] then
+                FCurPos := cPos + 1
+              else
+                FCurPos := cPos - 1;
+            end else begin
+              if FClickX mod 12 in [6..11] then
+                FCurPos := cPos + 1
+              else
+                FCurPos := cPos - 1;
+            end;
+          end;
+      end;
+
+      if FSelClickStart then begin
+        FSelClickStart := False;
+        FSelStart := FCurPos;
+      end;
+      if FSelClickEnd then begin
+        FSelClickEnd := False;
+        FSelEnd := FCurPos;
+      end;
+
+    end;
+
+    WidthX := TextWidth(Copy(tmpword, 1, FCurPos));
+    if WidthX + 3 - FStartTextX > Width then
+      FStartTextX := WidthX + 3 - Width;
+
+    if ((WidthX - FStartTextX) < 0) then
+      FStartTextX := FStartTextX + (WidthX - FStartTextX);
+
+
+    if FTransparent then begin
+      if FEnabled then begin
+        FontColor := self.Font.Color;
+        case FAlignment of
+          taCenter: begin
+              TextOut((nl - FStartTextX) + ((Width - TextWidth(tmpword)) div 2 - 2), nt,FontColor, tmpword);
+            end;
+          taLeftJustify: begin
+              ss := nl - FStartTextX;
+              MainForm.Canvas.Brush.Style := bsClear;
+              TextRect(Rect(nl, nt - 3 - Integer(FMiniCaret), nl + Width - 3, nt + Height),
+                string(tmpword),FontColor);
+            end;
+        end;
+        //复制文字以及背景
+        if (FSelStart > -1) and (FSelEnd > -1) and (FSelStart <> FSelEnd) and (FocusedControl = self) then begin
+          ss := TextWidth(Copy(tmpword, 1, FSelStart));
+          se := TextWidth(Copy(tmpword, 1, FSelEnd));
+          MainForm.Canvas.Brush.Style := bsClear;
+          BrushColor := clSkyBlue; //clBlue;        //GetRGB(4); //背景色 账号和密码
+          //增加选取复制文字背景
+          //FillRectAlpha(Rect(  _MAX(nl - 1, nl + ss - 1 - FStartTextX), nt - 1 - Integer(FMiniCaret), _MIN(nl + self.Width + 1, nl + se + 1 - FStartTextX), nt + TextHeight('c') + 1 - Integer(FMiniCaret)),BrushColor,255);
+          FontColor := clWhite;
+          if FSelStart < FSelEnd then begin   //复制文字显示
+              FillRectAlpha(Rect(
+                nl + ss - 1,
+                nt - 3 - Integer(FMiniCaret),
+                nl + ss + TextWidth(Copy(tmpword, FSelStart+1, FSelEnd-FSelStart)) + 1,
+                nt + TextHeight('c') + 2 - Integer(FMiniCaret) * 1),BrushColor,255);
+              TextRectR(
+                Rect(
+                nl + ss - 1,
+                nt - 3 - Integer(FMiniCaret),
+                nl + ss + TextWidth(Copy(tmpword, FSelStart+1, FSelEnd-FSelStart)) + 1,
+                nt + TextHeight('c') + 2 - Integer(FMiniCaret) * 1),
+                Copy(tmpword, FSelStart+1, FSelEnd-FSelStart),FontColor);
+            end else begin
+              FillRectAlpha(Rect(
+                nl + se - 1,
+                nt - 3 - Integer(FMiniCaret),
+                nl + se + TextWidth(Copy(tmpword, FSelEnd+1, FSelStart-FSelEnd)) + 1,
+                nt + TextHeight('c') + 2 - Integer(FMiniCaret)),BrushColor,255);
+              TextRectR(
+                Rect(
+                nl + se - 1,
+                nt - 3 - Integer(FMiniCaret),
+                nl + se + TextWidth(Copy(tmpword, FSelEnd+1, FSelStart-FSelEnd)) + 1,
+                nt + TextHeight('c') + 2 - Integer(FMiniCaret)),
+                Copy(tmpword, FSelEnd+1, FSelStart-FSelEnd),FontColor);
+          end;
+        end;
+      end;
+    end else begin
+      if FFrameVisible then begin
+        if FEnabled or (self is TDComboBox) then begin
+          if FFrameHot then tmpColor := FFrameHotColor else tmpColor := FFrameColor;
+        end else
+          tmpColor := clGray;
+
+        MainForm.Canvas.Brush.Style := bsClear;
+        BrushColor := tmpColor; //TDxEdit 矩形边框颜色
+        FillRectAlpha(Rect(nl - 3, nt - 4, nl + Width - 1, nt + Height), BrushColor, 255)
+      end;
+
+      if FIsHotKey then begin //是否热键
+        bFocused := FocusedControl = self;
+        if FEnabled then begin //可用
+          MainForm.Canvas.Brush.Style := bsClear;
+          MainForm.Canvas.Pen.Color := clBlack;
+          BrushColor := clBlack; //TDxEdit 填充颜色 可用
+          FillRectAlpha(Rect(nl + FFrameSize - 3 + Integer(bFocused),
+           nt + FFrameSize - 3 + Integer(bFocused), nl + Width - FFrameSize - 1 - Integer(bFocused),
+           nt + Height - FFrameSize - 1 - Integer(bFocused)), BrushColor, 255);
+
+          if bFocused then
+            FontColor := clLime //选中颜色
+          else
+            FontColor := self.Font.Color; //正常显示颜色
+        end else begin
+          MainForm.Canvas.Brush.Style := bsClear;
+//          MainForm.Canvas.Pen.Color := self.Color;
+         BrushColor := self.Color; //TDxEdit 填充颜色 不可用
+         FillRectAlpha(Rect(nl + FFrameSize - 3, nt + FFrameSize - 3,
+          nl + Width - FFrameSize - 1, nt + Height - FFrameSize - 1), BrushColor, 255);
+
+          FontColor := clGray;
+        end;
+        case FAlignment of
+          taCenter: TextOut((nl - FStartTextX) + ((Width - TextWidth(tmpword)) div 2 - 2), nt,FontColor, tmpword);
+          taLeftJustify: begin
+              TextOut(nl - FStartTextX, nt,FontColor, tmpword);
+            end;
+        end;
+      end else begin  
+        MainForm.Canvas.Brush.Style := bsClear;
+        BrushColor := self.Color; //TDxEdit+TDComboBox 背景填充颜色
+        FillRectAlpha(Rect(nl - 3 + FFrameSize, nt - 4 + FFrameSize,
+        nl + Width - 1 - FFrameSize, nt + Height - FFrameSize), BrushColor, 255);
+        if FEnabled then begin
+
+          case FAlignment of
+            taCenter: TextOut(
+                (nl - FStartTextX) + ((Width - TextWidth(tmpword)) div 2 - 2),
+                nt - Integer(FMiniCaret) * 1,FontColor,
+                tmpword);
+            taLeftJustify: begin
+                ss := nl - FStartTextX;
+                MainForm.Canvas.Brush.Style := bsClear;
+                TextRectR(Rect(nl, nt - Integer(FMiniCaret) - 3, nl + Width - 1, nt + Height),
+                tmpword,FontColor);
+
+              end;
+          end;
+
+          if (FSelStart > -1) and (FSelEnd > -1) and (FSelStart <> FSelEnd) and (FocusedControl = self) then begin
+            ss := TextWidth(Copy(tmpword, 1, FSelStart));
+            se := TextWidth(Copy(tmpword, 1, FSelEnd));
+            MainForm.Canvas.Brush.Style := bsClear;
+            BrushColor := clSkyBlue; //clBlue;      //GetRGB(4); 文字选中颜色   摆摊界面
+            {FillRectAlpha(Rect(
+                _MAX(nl - 1, nl + ss - 1 - FStartTextX),
+                nt - 1 - Integer(FMiniCaret) * 1,
+                _MIN(nl + self.Width + 1, nl + se + 1 - FStartTextX),
+                nt + TextHeight('c') + 1 - Integer(FMiniCaret) * 1),BrushColor,255);}
+
+            FontColor := clWhite;
+            if FSelStart < FSelEnd then begin
+              FillRectAlpha(Rect(
+                nl + ss - 1,
+                nt - 3 - Integer(FMiniCaret),
+                nl + ss + TextWidth(Copy(tmpword, FSelStart+1, FSelEnd-FSelStart)) + 1,
+                nt + TextHeight('c') + 2 - Integer(FMiniCaret) * 1), BrushColor, 255);
+              TextRectR(
+                Rect(
+                nl + ss - 1,
+                nt - 3 - Integer(FMiniCaret),
+                nl + ss + TextWidth(Copy(tmpword, FSelStart+1, FSelEnd-FSelStart)) + 1,
+                nt + TextHeight('c') + 2 - Integer(FMiniCaret) * 1),
+                Copy(tmpword, FSelStart+1, FSelEnd-FSelStart),FontColor);
+            end else begin
+              FillRectAlpha(Rect(
+                nl + se - 1,
+                nt - 3 - Integer(FMiniCaret),
+                nl + se + TextWidth(Copy(tmpword, FSelEnd+1, FSelStart-FSelEnd)) + 1,
+                nt + TextHeight('c') + 2 - Integer(FMiniCaret)),BrushColor,255);
+              TextRectR(
+                Rect(
+                nl + se - 1,
+                nt - 3 - Integer(FMiniCaret),
+                nl + se + TextWidth(Copy(tmpword, FSelEnd+1, FSelStart-FSelEnd)) + 1,
+                nt + TextHeight('c') + 2 - Integer(FMiniCaret)),
+                Copy(tmpword, FSelEnd+1, FSelStart-FSelEnd),FontColor);
+            end;
+
+          end;
+          FontColor := self.Font.Color;
+
+        end else begin
+          FontColor := clYellow;
+
+          case FAlignment of
+            taCenter: TextOut(
+                (nl - FStartTextX) + ((Width - TextWidth(tmpword)) div 2 - 2),
+                nt - Integer(FMiniCaret) * 1,FontColor,
+                tmpword);
+            taLeftJustify: begin
+                ss := nl - FStartTextX;
+                MainForm.Canvas.Brush.Style := bsClear;
+                TextRectR(Rect(nl, nt - 4 - Integer(FMiniCaret), nl + Width - 1, nt + Height + 1),
+                tmpword,FontColor);
+              end;
+          end;
+        end;
+      end;
+      if self is TDComboBox then begin
+        FontColor := clWhite;
+//        MainForm.Canvas.Pen.Color := tmpColor;
+//        MainForm.Canvas.Brush.Style := bsClear;
+//        BrushColor := tmpColor;
+        Polygon([
+          Point(nl + Width - DECALW * 2 + Integer(Downed), nt + (Height - DECALH) div 2 - 2 + Integer(Downed)),
+          Point(nl + Width - DECALW + Integer(Downed), nt + (Height - DECALH) div 2 - 2 + Integer(Downed)),
+          Point(nl + Width - DECALW - DECALW div 2 + Integer(Downed), nt + (Height - DECALH) div 2 + DECALH - 2 + Integer(Downed))
+            ],FontColor,True);
+      end;
+    end;
+    if FEnabled then begin //闪动光标
+      if (FocusedControl = self) then begin
+        begin
+          SetFrameHot(True);
+          if (Length(tmpword) >= FCurPos) and (FShowCaret and not FIsHotKey) then begin
+//            MainForm.Canvas.Pen.Color := FCaretColor;
+//            MainForm.Canvas.Brush.Style := bsClear;
+            BrushColor := clRed;
+            case FAlignment of
+              taCenter: begin
+                  FillRectAlpha(Rect(nl + WidthX - FStartTextX + ((Width - TextWidth(tmpword)) div 2 - 2),
+                    nt - Integer(FMiniCaret <> 0) * 1,
+                    nl + WidthX + 2 - Integer(FMiniCaret <> 0) - FStartTextX + ((Width - TextWidth(tmpword)) div 2 - 2),
+                    nt - Integer(FMiniCaret <> 0) * 1 + TextHeight('c')),FCaretColor,255 )
+                end;
+              taLeftJustify: begin
+                  FillRectAlpha(Rect(nl + WidthX - FStartTextX,
+                    nt - Integer(FMiniCaret) * 1 - Integer(FMiniCaret = 0),
+                    nl + WidthX + 2 - FStartTextX - Integer(FMiniCaret <> 0),
+                    nt - Integer(FMiniCaret) * 1 + TextHeight('c') + Integer(FMiniCaret = 0)),FCaretColor,255
+                    );
+                end;
+            end;
+
+          end;
+        end;
+      end;
+    end;
+{$IF NEWUUI}
+    if (Text = '') and (g_SendSayList.count > 0) and (m_InputHint <> '') then begin
+      FontColor := clSilver;
+      g_DXCanvas.TextOut(nl + self.Width - g_DXCanvas.TextWidth(m_InputHint) - 4, nt - Integer(FMiniCaret),FontColor, m_InputHint);
+    end;
+{$ELSE}
+    if (Text = '') and (m_InputHint <> '') then begin
+      FontColor := clGray;
+      g_DXCanvas.TextOut(nl + self.Width - g_DXCanvas.TextWidth(m_InputHint) - 4, nt - Integer(FMiniCaret),FontColor, m_InputHint);
+    end;
+{$IFEND NEWUUI}
+  end;
+  MainForm.Canvas.Font.Size := oCSize;
+  MainForm.Canvas.Pen.Color := op;
+  MainForm.Canvas.Brush.Color := ob;
+  MainForm.Canvas.Font.Color := ofc;
+
+  for i := 0 to DControls.count - 1 do
+    if TDControl(DControls[i]).Visible then
+      TDControl(DControls[i]).DirectPaint(dsurface);
+end;
+
+function TDxCustomEdit.MouseMove(Shift: TShiftState; X, Y: Integer): Boolean;
+begin
+  Result := False;
+  FSelClickEnd := False;
+  if inherited MouseMove(Shift, X, Y) then begin
+    if [ssLeft] = Shift then begin
+      if FEnabled and not FIsHotKey and (MouseCaptureControl = self) and (Caption <> '') then begin
+        FClick := True;
+        FSelClickEnd := True;
+        FClickX := X - Left + FStartTextX;
+      end;
+    end else begin
+      //if DxHint <> nil then
+      //  DxHint.Visible := False;
+    end;
+    Result := True;
+  end;
+end;
+
+function TDxCustomEdit.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): Boolean;
+begin
+  Result := False;
+  FSelClickStart := False;
+  if inherited MouseDown(Button, Shift, X, Y) then begin
+    if FEnabled and not FIsHotKey and (MouseCaptureControl = self) then begin
+      if Button = mbLeft then begin
+        FSelEnd := -1;
+        FSelStart := -1;
+        FClick := True;
+        FSelClickStart := True;
+        FClickX := X - Left + FStartTextX;
+      end;
+    end else begin
+      //if DxHint <> nil then
+      //  DxHint.Visible := False;
+    end;
+    Result := True;
+  end;
+end;
+
+function TDxCustomEdit.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): Boolean;
+begin
+  Result := False;
+  FSelClickEnd := False;
+  if inherited MouseUp(Button, Shift, X, Y) then begin
+    if FEnabled and not FIsHotKey and (MouseCaptureControl = self) then begin
+      if Button = mbLeft then begin
+        FSelEnd := -1;
+        FClick := True;
+        FSelClickEnd := True;
+        FClickX := X - Left + FStartTextX;
+      end;
+    end else begin
+      //if DxHint <> nil then
+      //  DxHint.Visible := False;
+    end;
+    Result := True;
+  end;
+end;
+
+{--------------------- TDComboBox --------------------------}
+
+constructor TDComboBox.Create(aowner: TComponent);
+begin
+  inherited Create(aowner);
+  DropDownList := nil;
+  FShowCaret := False;
+  FTransparent := False;
+  FEnabled := False;
+  FDropDownList := nil;
+end;
+
+function TDComboBox.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): Boolean;
+begin
+  Result := False;
+  if inherited MouseDown(Button, Shift, X, Y) then begin
+    if (not Background) and (MouseCaptureControl = nil) then begin
+      Downed := True;
+      SetDCapture(self);
+    end;
+    if (FDropDownList <> nil) and not FDropDownList.ChangingHero then begin
+      FDropDownList.Visible := not FDropDownList.Visible;
+    end;
+    Result := True;
+  end else if FDropDownList <> nil then begin
+    if FDropDownList.Visible then
+      FDropDownList.Visible := False;
+  end;
+end;
+
+function TDComboBox.MouseMove(Shift: TShiftState; X, Y: Integer): Boolean;
+begin
+  Result := inherited MouseMove(Shift, X, Y);
+  if not Background then begin
+    if Result then
+      SetFrameHot(True)
+    else if FocusedControl <> self then
+      SetFrameHot(False);
+  end;
+end;
+
+{------------------------- TDxCustomListBox --------------------------}
+
+constructor TDxCustomListBox.Create(aowner: TComponent);
+begin
+  inherited Create(aowner);
+  FSelected := -1;
+  ChangingHero := False;
+  FItems := TStringList.Create;
+  FBackColor := clWhite;
+  FSelectionColor := clSilver;
+  FOnChangeSelect := nil;               //ChangeSelect;
+  FOnMouseMoveSelect := nil;
+  ParentComboBox := nil;
+  FParentComboBox := nil;
+  //DxScroll := TDxScrollBar.Create(w - 20, 0, 20, h - 2, Self, FItems, Font, h - 2);
+  //add_fenetre(DxScroll);
+end;
+
+destructor TDxCustomListBox.Destroy;
+begin
+  FItems.Free;
+  inherited;
+end;
+
+function TDxCustomListBox.GetItemSelected: Integer;
+begin
+  if (FSelected > FItems.count - 1) or (FSelected < 0) then
+    Result := -1
+  else
+    Result := FSelected;
+  //if Assigned(FOnChangeSelect) then begin
+  // FOnChangeSelect(Self, FSelected);
+  //end;
+end;
+
+procedure TDxCustomListBox.SetItemSelected(Value: Integer);
+begin
+  if (Value > FItems.count - 1) or (Value < 0) then
+    FSelected := -1
+  else
+    FSelected := Value;
+  {if Assigned(FOnChangeSelect) then begin
+    FOnChangeSelect(Self, FSelected);
+  end;}
+end;
+
+procedure TDxCustomListBox.SetBackColor(Value: TColor);
+begin
+  if FBackColor <> Value then begin
+    FBackColor := Value;
+    Perform(CM_COLORCHANGED, 0, 0);
+  end;
+end;
+
+procedure TDxCustomListBox.SetSelectionColor(Value: TColor);
+begin
+  if FSelectionColor <> Value then begin
+    FSelectionColor := Value;
+    Perform(CM_COLORCHANGED, 0, 0);
+  end;
+end;
+
+function TDxCustomListBox.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): Boolean;
+begin
+  //DScreen.AddChatBoardString('MouseDown', clWhite, clRed);
+  Result := inherited MouseDown(Button, Shift, X, Y);
+end;
+
+function TDxCustomListBox.MouseMove(Shift: TShiftState; X, Y: Integer): Boolean;
+var
+  TmpSel                    : Integer;
+begin
+  FSelected := -1;
+  Result := inherited MouseMove(Shift, X, Y);
+  if Result and FEnabled and not Background then begin
+
+    TmpSel := FSelected;
+    if (FItems.count = 0) then
+      FSelected := -1
+    else
+      FSelected := (-Top + Y) div (-MainForm.Canvas.Font.Height + LineSpace);
+    if FSelected > FItems.count - 1 then
+      FSelected := -1;
+    if Assigned(FOnMouseMoveSelect) then
+      FOnMouseMoveSelect(self, Shift, X, Y);
+  end;
+end;
+
+function TDxCustomListBox.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer): Boolean;
+var
+  ret                       : Boolean;
+  TmpSel                    : Integer;
+begin
+  ret := inherited MouseUp(Button, Shift, X, Y);
+  if ret then begin
+    TmpSel := FSelected;
+    if (FItems.count = 0) then
+      FSelected := -1
+    else
+      FSelected := (-Top + Y) div (-MainForm.Canvas.Font.Height + LineSpace);
+
+    if FSelected > FItems.count - 1 then
+      FSelected := -1;
+
+    if FSelected <> -1 then begin
+      if ParentComboBox <> nil then begin
+        if ParentComboBox.Caption <> FItems[FSelected] then begin
+          if Caption = 'SelectHeroList' then begin
+            ChangingHero := True;
+            frmDlg.QueryChangeHero(FItems[FSelected]);
+          end else
+            ParentComboBox.Caption := FItems[FSelected];
+        end;
+      end;
+      if Integer(FItems.Objects[FSelected]) > 0 then
+        ParentComboBox.tag := Integer(FItems.Objects[FSelected]);
+    end;
+    if Assigned(FOnChangeSelect) then
+      FOnChangeSelect(self, Button, Shift, X, Y);
+    Visible := False;
+    ret := True;
+  end;
+  Result := ret;
+end;
+
+function TDxCustomListBox.KeyDown(var Key: Word; Shift: TShiftState): Boolean;
+var
+  ret                       : Boolean;
+begin
+  ret := inherited KeyDown(Key, Shift);
+  if ret then begin
+    case Key of
+      VK_PRIOR: begin
+          ItemSelected := ItemSelected - Height div -MainForm.Canvas.Font.Height;
+          if (ItemSelected = -1) then ItemSelected := 0;
+        end;
+      VK_NEXT: begin
+          ItemSelected := ItemSelected + Height div -MainForm.Canvas.Font.Height;
+          if ItemSelected = -1 then ItemSelected := FItems.count - 1;
+        end;
+      VK_UP: if ItemSelected - 1 > -1 then
+          ItemSelected := ItemSelected - 1;
+      VK_DOWN: if ItemSelected + 1 < FItems.count then
+          ItemSelected := ItemSelected + 1;
+    end;
+    {case Key of
+      VK_PRIOR, VK_NEXT, VK_UP, VK_DOWN: if (ItemSelected <> -1) then begin
+          while (((-DxScroll.GetPos + Height) div -Font.Height) <= ItemSelected) do
+            DxScroll.MoveModPos(Font.Height);
+          while (((-DxScroll.GetPos) div -Font.Height) > ItemSelected) do
+            DxScroll.MoveModPos(-Font.Height);
+        end;
+    end;}
+  end;
+  Result := ret;
+end;
+
+{procedure TDxCustomListBox.ChangeSelect(ChangeSelect: Integer);
+begin
+  //
+end;}
+
+procedure TDxCustomListBox.SetItems(Value: TStrings);
+begin
+  FItems.Assign(Value);
+end;
+
+procedure TDxCustomListBox.DirectPaint(dsurface: TDXTexture);
+var
+  fy, nY, L, T, i, oSize    : Integer;
+  OldColor,{BrushColor,}FontColor                  : TColor;
+begin
+  if Assigned(FOnDirectPaint) then begin
+    FOnDirectPaint(self, dsurface);
+    Exit;
+  end;
+  L := SurfaceX(Left);
+  T := SurfaceY(Top);
+  with g_DXCanvas do begin
+    try
+      OldColor := MainForm.Canvas.Font.Color;
+      oSize := MainForm.Canvas.Font.Size;
+      //MainForm.Canvas.Font.Color := clBlack;
+      //MainForm.Canvas.Font.Size := self.Font.Size;
+      //MainForm.Canvas.Brush.Style := bsSolid;
+      //BrushColor := SelectionColor;
+      FillRectAlpha(Rect(L, T, L + Width, T + Height), clGray, 200); //TDListBox 背景颜色
+      //BrushColor := BackColor;
+      if FSelected <> -1 then begin
+        nY := T + (-MainForm.Canvas.Font.Height + LineSpace) * FSelected;
+        fy := nY + (-MainForm.Canvas.Font.Height + LineSpace);
+        if (nY < T + Height - 1) and (fy > T + 1) then begin
+          if (fy > T + Height - 1) then fy := T + Height - 1;
+          if (nY < T + 1) then nY := T + 1;
+          FillRectAlpha(Rect(L + 1, nY, L + Width - 1, fy + 2), SelectionColor, 255);
+        end;
+      end;                                             
+      //MainForm.Canvas.Brush.Style := bsClear;
+      for i := 0 to FItems.count - 1 do begin
+        if FSelected = i then begin
+          FontColor := OldColor;
+          g_DXCanvas.BoldTextOut(L + 2, 2 + T + (-MainForm.Canvas.Font.Height + LineSpace) * i, FontColor, FItems.Strings[i]);
+        end else begin
+          FontColor := clWhite;
+          g_DXCanvas.BoldTextOut(L + 2, 2 + T + (-MainForm.Canvas.Font.Height + LineSpace) * i, FontColor, FItems.Strings[i]);
+        end;
+      end;
+      MainForm.Canvas.Font.Color := OldColor;
+      MainForm.Canvas.Font.Size := oSize;
+    finally
+    end;
+  end;
+end;
+
+end.

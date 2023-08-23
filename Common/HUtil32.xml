@@ -1,0 +1,823 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<namespace name="HUtil32">
+  <array name="Str4096" low="0" high="4096">
+    <element type="Char" />
+  </array>
+  <array name="Str256" low="0" high="256">
+    <element type="Char" />
+  </array>
+  <struct name="TyNameTable">
+    <field name="Name" type="string" visibility="public" />
+    <field name="varl" type="Integer" visibility="public" />
+  </struct>
+  <struct name="TLRect">
+    <field name="Left" type="Integer" visibility="public" />
+    <field name="Top" type="Integer" visibility="public" />
+    <field name="Right" type="Integer" visibility="public" />
+    <field name="Bottom" type="Integer" visibility="public" />
+  </struct>
+  <const name="MAXDEFCOLOR" type="Integer">
+    <value>
+      $10
+    </value>
+  </const>
+  <const name="ColorNames" visibility="public" />
+  <const name="MAXLISTMARKER" type="Integer">
+    <value>
+      $3
+    </value>
+  </const>
+  <const name="LiMarkerNames" visibility="public" />
+  <const name="MAXPREDEFINE" type="Integer">
+    <value>
+      $3
+    </value>
+  </const>
+  <const name="PreDefineNames" visibility="public" />
+  <function name="CRC8" visibility="public">
+    <parameters>
+      <parameter name="s" type="string" paramflags="const" />
+      <retval type="Byte" />
+    </parameters>
+  </function>
+  <function name="CRC16" visibility="public">
+    <parameters>
+      <parameter name="s" type="PByteArray" />
+      <parameter name="iCount" type="Integer" />
+      <parameter name="OldCRC" type="Word">
+        <value>
+          $0
+        </value>
+      </parameter>
+      <retval type="Word" />
+    </parameters>
+  </function>
+  <function name="CRC32" visibility="public">
+    <parameters>
+      <parameter name="s" type="PByteArray" />
+      <parameter name="iCount" type="Integer" />
+      <parameter name="OldCRC" type="Cardinal">
+        <value>
+          $0
+        </value>
+      </parameter>
+      <retval type="Cardinal" />
+    </parameters>
+  </function>
+  <function name="AddToRAR" visibility="public">
+    <parameters>
+      <parameter name="WorkPath" type="string" />
+      <parameter name="RarDir" type="string" />
+      <parameter name="ArchiveName" type="string" />
+      <parameter name="FileNames" type="string" />
+      <parameter name="ArchiveOptions" type="string" />
+      <retval type="Cardinal" />
+    </parameters>
+  </function>
+  <procedure name="DeleteDir" visibility="public">
+    <parameters>
+      <parameter name="sDirectory" type="string" />
+      <parameter name="RDir" type="Boolean">
+        <value>
+          True
+        </value>
+      </parameter>
+    </parameters>
+  </procedure>
+  <procedure name="aSort" visibility="public">
+    <parameters>
+      <parameter name="a" paramflags="var">
+        <array name="a">
+          <element type="Integer" />
+        </array>
+      </parameter>
+    </parameters>
+  </procedure>
+  <function name="IsIPaddr" visibility="public">
+    <parameters>
+      <parameter name="IP" type="string" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="CalcFileCRC" visibility="public">
+    <parameters>
+      <parameter name="FileName" type="string" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="CalcBufferCRC" visibility="public">
+    <parameters>
+      <parameter name="Buffer" type="PAnsiChar" />
+      <parameter name="nSize" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="CaptureString" visibility="public">
+    <parameters>
+      <parameter name="Source" type="string" />
+      <parameter name="rdstr" type="string" paramflags="var" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="CountGarbage" visibility="public">
+    <parameters>
+      <parameter name="paper" type="TCanvas" />
+      <parameter name="Src" type="PAnsiChar" />
+      <parameter name="TargWidth" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="GetSpaceCount" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="RemoveSpace" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="KillFirstSpace" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" paramflags="var" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <procedure name="KillGabageSpace" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" paramflags="var" />
+    </parameters>
+  </procedure>
+  <function name="GetFirstWord" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <parameter name="sWord" type="string" paramflags="var" />
+      <parameter name="FrontSpace" type="Integer" paramflags="var" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="HexToIntEx" visibility="public">
+    <parameters>
+      <parameter name="shap_str" type="string" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="HexToInt" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="Str_ToInt" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <parameter name="Def" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="Str_ToDate" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="TDateTime" />
+    </parameters>
+  </function>
+  <function name="Str_ToTime" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="TDateTime" />
+    </parameters>
+  </function>
+  <function name="Str_ToFloat" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="Real" />
+    </parameters>
+  </function>
+  <procedure name="DrawingGhost" visibility="public">
+    <parameters>
+      <parameter name="rc" type="TRect" />
+    </parameters>
+  </procedure>
+  <function name="ExtractFileNameOnly" visibility="public">
+    <parameters>
+      <parameter name="FName" type="string" paramflags="const" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="FloatToString" visibility="public">
+    <parameters>
+      <parameter name="F" type="Real" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="FloatToStrFixFmt" visibility="public">
+    <parameters>
+      <parameter name="fVal" type="Double" />
+      <parameter name="prec" type="Integer" />
+      <parameter name="digit" type="Integer" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="FileSize" visibility="public">
+    <parameters>
+      <parameter name="FName" type="string" paramflags="const" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="FileCopy" visibility="public">
+    <parameters>
+      <parameter name="Source" type="string" />
+      <parameter name="Dest" type="string" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="FileCopyEx" visibility="public">
+    <parameters>
+      <parameter name="Source" type="string" />
+      <parameter name="Dest" type="string" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="GetDefColorByName" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="TColor" />
+    </parameters>
+  </function>
+  <function name="GetULMarkerType" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="GetDefines" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <procedure name="ClearWindow" visibility="public">
+    <parameters>
+      <parameter name="ACanvas" type="TCanvas" />
+      <parameter name="aLeft" type="Integer" />
+      <parameter name="aTop" type="Integer" />
+      <parameter name="aRight" type="Integer" />
+      <parameter name="aBottom" type="Integer" />
+      <parameter name="aColor" type="TColor" />
+    </parameters>
+  </procedure>
+  <procedure name="DrawTileImage" visibility="public">
+    <parameters>
+      <parameter name="Canv" type="TCanvas" />
+      <parameter name="Rect" type="TRect" />
+      <parameter name="TileImage" type="TBitmap" />
+    </parameters>
+  </procedure>
+  <procedure name="TiledImage" visibility="public">
+    <parameters>
+      <parameter name="Canv" type="TCanvas" />
+      <parameter name="Rect" type="TLRect" />
+      <parameter name="TileImage" type="TBitmap" />
+    </parameters>
+  </procedure>
+  <function name="GetValidStr3" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <parameter name="Dest" type="string" paramflags="var" />
+      <parameter name="Divider" paramflags="const">
+        <array name="Divider">
+          <element type="Char" />
+        </array>
+      </parameter>
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="GetValidStr4" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <parameter name="Dest" type="string" paramflags="var" />
+      <parameter name="Divider" paramflags="const">
+        <array name="Divider">
+          <element type="Char" />
+        </array>
+      </parameter>
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="GetValidStrVal" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <parameter name="Dest" type="string" paramflags="var" />
+      <parameter name="Divider" paramflags="const">
+        <array name="Divider">
+          <element type="Char" />
+        </array>
+      </parameter>
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="GetValidStrCap" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <parameter name="Dest" type="string" paramflags="var" />
+      <parameter name="Divider" paramflags="const">
+        <array name="Divider">
+          <element type="Char" />
+        </array>
+      </parameter>
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="IntToStrFill" visibility="public">
+    <parameters>
+      <parameter name="num" type="Integer" />
+      <parameter name="Len" type="Integer" />
+      <parameter name="Fill" type="Char" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="IntToStr2" visibility="public">
+    <parameters>
+      <parameter name="Int" type="Integer" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="IsInB" visibility="public">
+    <parameters>
+      <parameter name="Src" type="string" />
+      <parameter name="Pos" type="Integer" />
+      <parameter name="targ" type="string" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="IsInRect" visibility="public">
+    <parameters>
+      <parameter name="X" type="Integer" />
+      <parameter name="Y" type="Integer" />
+      <parameter name="Rect" type="TRect" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="IsStringNumber" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="ArrestString" visibility="public">
+    <parameters>
+      <parameter name="Source" type="string" />
+      <parameter name="SearchAfter" type="string" />
+      <parameter name="ArrestBefore" type="string" />
+      <parameter name="DropTags" paramflags="const">
+        <array name="DropTags">
+          <element type="string" />
+        </array>
+      </parameter>
+      <parameter name="RsltStr" type="string" paramflags="var" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="ArrestStringEx" visibility="public">
+    <parameters>
+      <parameter name="Source" type="string" />
+      <parameter name="SearchAfter" type="string" />
+      <parameter name="ArrestBefore" type="string" />
+      <parameter name="ArrestStr" type="string" paramflags="var" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="SkipStr" visibility="public">
+    <parameters>
+      <parameter name="Src" type="string" />
+      <parameter name="Skips" paramflags="const">
+        <array name="Skips">
+          <element type="Char" />
+        </array>
+      </parameter>
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="GetStrToCoords" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="TRect" />
+    </parameters>
+  </function>
+  <function name="CombineDirFile" visibility="public">
+    <parameters>
+      <parameter name="SrcDir" type="string" />
+      <parameter name="TargName" type="string" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="CompareLStr" visibility="public">
+    <parameters>
+      <parameter name="Src" type="string" />
+      <parameter name="targ" type="string" />
+      <parameter name="compn" type="Integer" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="CompareBuffer" visibility="public">
+    <parameters>
+      <parameter name="p1" type="PByte" />
+      <parameter name="p2" type="PByte" />
+      <parameter name="Len" type="Integer" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="CompareBackLStr" visibility="public">
+    <parameters>
+      <parameter name="Src" type="string" />
+      <parameter name="targ" type="string" />
+      <parameter name="compn" type="Integer" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="IsEnglish" visibility="public">
+    <parameters>
+      <parameter name="ch" type="Char" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="IsEngNumeric" visibility="public">
+    <parameters>
+      <parameter name="ch" type="Char" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="IsFloatNumeric" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <procedure name="PCharSet" visibility="public">
+    <parameters>
+      <parameter name="p" type="PAnsiChar" />
+      <parameter name="n" type="Integer" />
+      <parameter name="ch" type="Char" />
+    </parameters>
+  </procedure>
+  <function name="ReplaceChar" visibility="public">
+    <parameters>
+      <parameter name="Src" type="string" />
+      <parameter name="srcchr" type="Char" />
+      <parameter name="repchr" type="Char" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="IsUniformStr" visibility="public">
+    <parameters>
+      <parameter name="Src" type="string" />
+      <parameter name="ch" type="Char" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="CreateMask" visibility="public">
+    <parameters>
+      <parameter name="Src" type="PAnsiChar" />
+      <parameter name="TargPos" type="Integer" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="GetValueFromMask" visibility="public">
+    <parameters>
+      <parameter name="Src" type="PAnsiChar" />
+      <parameter name="Mask" type="string" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <procedure name="GetDirList" visibility="public">
+    <parameters>
+      <parameter name="Path" type="string" />
+      <parameter name="flList" type="TStringList" />
+    </parameters>
+  </procedure>
+  <function name="GetFileDate" visibility="public">
+    <parameters>
+      <parameter name="FileName" type="string" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="GetItemFormatDate" visibility="public">
+    <parameters>
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="GetItemDateTimeInfo" visibility="public">
+    <parameters>
+      <parameter name="nDateTimeInfo" type="Integer" />
+      <retval type="TDateTime" />
+    </parameters>
+  </function>
+  <procedure name="ShlStr" visibility="public">
+    <parameters>
+      <parameter name="Source" type="PAnsiChar" />
+      <parameter name="count" type="Integer" />
+    </parameters>
+  </procedure>
+  <procedure name="ShrStr" visibility="public">
+    <parameters>
+      <parameter name="Source" type="PAnsiChar" />
+      <parameter name="count" type="Integer" />
+    </parameters>
+  </procedure>
+  <function name="LRect" visibility="public">
+    <parameters>
+      <parameter name="L" type="Integer" />
+      <parameter name="t" type="Integer" />
+      <parameter name="r" type="Integer" />
+      <parameter name="b" type="Integer" />
+      <retval type="TLRect" />
+    </parameters>
+  </function>
+  <procedure name="MemPCopy" visibility="public">
+    <parameters>
+      <parameter name="Dest" type="PAnsiChar" />
+      <parameter name="Src" type="string" />
+    </parameters>
+  </procedure>
+  <procedure name="MemCpy" visibility="public">
+    <parameters>
+      <parameter name="Dest" type="PAnsiChar" />
+      <parameter name="Src" type="PAnsiChar" />
+      <parameter name="count" type="Integer" />
+    </parameters>
+  </procedure>
+  <procedure name="memcpy2" visibility="public">
+    <parameters>
+      <parameter name="TargAddr" type="Integer" />
+      <parameter name="SrcAddr" type="Integer" />
+      <parameter name="count" type="Integer" />
+    </parameters>
+  </procedure>
+  <procedure name="memset" visibility="public">
+    <parameters>
+      <parameter name="Buffer" type="PAnsiChar" />
+      <parameter name="FillChar" type="Char" />
+      <parameter name="count" type="Integer" />
+    </parameters>
+  </procedure>
+  <procedure name="Str256PCopy" visibility="public">
+    <parameters>
+      <parameter name="Dest" type="PAnsiChar" />
+      <parameter name="Src" type="string" paramflags="const" />
+    </parameters>
+  </procedure>
+  <function name="_StrPas" visibility="public">
+    <parameters>
+      <parameter name="Dest" type="PAnsiChar" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="Str_PCopy" visibility="public">
+    <parameters>
+      <parameter name="Dest" type="PAnsiChar" />
+      <parameter name="Src" type="string" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="Str_PCopyEx" visibility="public">
+    <parameters>
+      <parameter name="Dest" type="PAnsiChar" />
+      <parameter name="Src" type="string" paramflags="const" />
+      <parameter name="BufLen" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="Trim_R" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" paramflags="const" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="IsEqualFont" visibility="public">
+    <parameters>
+      <parameter name="SrcFont" type="TFont" />
+      <parameter name="TarFont" type="TFont" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="CutHalfCode" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="ConvertToShortName" visibility="public">
+    <parameters>
+      <parameter name="Canvas" type="TCanvas" />
+      <parameter name="Source" type="string" />
+      <parameter name="WantWidth" type="Integer" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <procedure name="SpliteBitmap" visibility="public">
+    <parameters>
+      <parameter name="DC" type="HDC" />
+      <parameter name="X" type="Integer" />
+      <parameter name="Y" type="Integer" />
+      <parameter name="bitmap" type="TBitmap" />
+      <parameter name="transcolor" type="TColor" />
+    </parameters>
+  </procedure>
+  <function name="TagCount" visibility="public">
+    <parameters>
+      <parameter name="Source" type="string" />
+      <parameter name="tag" type="Char" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="CatchString" visibility="public">
+    <parameters>
+      <parameter name="Source" type="string" />
+      <parameter name="cap" type="Char" />
+      <parameter name="catched" type="string" paramflags="var" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="DivString" visibility="public">
+    <parameters>
+      <parameter name="Source" type="string" />
+      <parameter name="cap" type="Char" />
+      <parameter name="sel" type="string" paramflags="var" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="DivTailString" visibility="public">
+    <parameters>
+      <parameter name="Source" type="string" />
+      <parameter name="cap" type="Char" />
+      <parameter name="sel" type="string" paramflags="var" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="SPos" visibility="public">
+    <parameters>
+      <parameter name="substr" type="string" />
+      <parameter name="Str" type="string" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="NumCopy" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="GetMonDay" visibility="public">
+    <parameters>
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="BoolToInt" visibility="public">
+    <parameters>
+      <parameter name="boBoolean" type="Boolean" />
+      <retval type="Byte" />
+    </parameters>
+  </function>
+  <function name="BoolToStr" visibility="public">
+    <parameters>
+      <parameter name="boo" type="Boolean" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="HBoolToStr" visibility="public">
+    <parameters>
+      <parameter name="b" type="Boolean" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="StrToBool" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="BoolToCStr" visibility="public">
+    <parameters>
+      <parameter name="boo" type="Boolean" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="IntToSex" visibility="public">
+    <parameters>
+      <parameter name="Int" type="Integer" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="IntToJob" visibility="public">
+    <parameters>
+      <parameter name="Int" type="Integer" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="BoolToIntStr" visibility="public">
+    <parameters>
+      <parameter name="boo" type="Boolean" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="_MIN" visibility="public">
+    <parameters>
+      <parameter name="N1" type="Integer" />
+      <parameter name="N2" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="_MAX" visibility="public">
+    <parameters>
+      <parameter name="N1" type="Integer" />
+      <parameter name="N2" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="_MAX1" visibility="public">
+    <parameters>
+      <parameter name="N1" type="Integer" />
+      <parameter name="N2" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="_LMIN" visibility="public">
+    <parameters>
+      <parameter name="N1" type="Cardinal" />
+      <parameter name="N2" type="UInt64" />
+      <retval type="Cardinal" />
+    </parameters>
+  </function>
+  <function name="GetDayCount" visibility="public">
+    <parameters>
+      <parameter name="MaxDate" type="TDateTime" />
+      <parameter name="MinDate" type="TDateTime" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="GetCodeMsgSize" visibility="public">
+    <parameters>
+      <parameter name="X" type="Double" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="NotGetCodeMsgSize" visibility="public">
+    <parameters>
+      <parameter name="X" type="Double" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="pGetCodeMsgSize" visibility="public">
+    <parameters>
+      <parameter name="X" type="Double" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="ConvertPercent" visibility="public">
+    <parameters>
+      <parameter name="N1" type="Integer" />
+      <parameter name="N2" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="JudgeOddEven" visibility="public">
+    <parameters>
+      <parameter name="bcs" type="Integer" paramflags="var" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="IsChinese" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="DecStr" visibility="public">
+    <parameters>
+      <parameter name="SourStr" type="string" />
+      <parameter name="X" type="Integer" />
+      <parameter name="Y" type="Integer" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="GetSystemFolderDir" visibility="public">
+    <parameters>
+      <parameter name="mFolder" type="Integer" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <procedure name="DisPoseAndNil" visibility="public">
+    <parameters>
+      <parameter name="Obj" paramflags="var" />
+    </parameters>
+  </procedure>
+  <function name="MyGetProcAddress" visibility="public">
+    <parameters>
+      <parameter name="hModule" type="Cardinal" />
+      <parameter name="lpProcName" type="PAnsiChar" />
+      <retval type="Pointer" />
+    </parameters>
+  </function>
+</namespace>

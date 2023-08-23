@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<namespace name="VMProtectSDK">
+  <struct name="TVMProtectDate" packed="true">
+    <field name="wYear" type="Word" visibility="public" />
+    <field name="bMonth" type="Byte" visibility="public" />
+    <field name="bDay" type="Byte" visibility="public" />
+  </struct>
+  <pointer name="PVMProtectSerialNumberData" type="TVMProtectSerialNumberData" indircnt="1" />
+  <struct name="TVMProtectSerialNumberData" packed="true">
+    <field name="nState" type="Cardinal" visibility="public" />
+    <field name="wUserName" visibility="public">
+      <array name="wUserName" low="0" high="255">
+        <element type="WideChar" />
+      </array>
+    </field>
+    <field name="wEMail" visibility="public">
+      <array name="wEMail" low="0" high="255">
+        <element type="WideChar" />
+      </array>
+    </field>
+    <field name="dtExpire" type="TVMProtectDate" visibility="public" />
+    <field name="dtMaxBuild" type="TVMProtectDate" visibility="public" />
+    <field name="bRunningTime" type="Cardinal" visibility="public" />
+    <field name="nUserDataLength" type="Byte" visibility="public" />
+    <field name="bUserData" visibility="public">
+      <array name="bUserData" low="0" high="254">
+        <element type="Byte" />
+      </array>
+    </field>
+  </struct>
+  <const name="SERIAL_STATE_FLAG_CORRUPTED" type="Integer">
+    <value>
+      $1
+    </value>
+  </const>
+  <const name="SERIAL_STATE_FLAG_INVALID" type="Integer">
+    <value>
+      $2
+    </value>
+  </const>
+  <const name="SERIAL_STATE_FLAG_BLACKLISTED" type="Integer">
+    <value>
+      $4
+    </value>
+  </const>
+  <const name="SERIAL_STATE_FLAG_DATE_EXPIRED" type="Integer">
+    <value>
+      $8
+    </value>
+  </const>
+  <const name="SERIAL_STATE_FLAG_RUNNING_TIME_OVER" type="Integer">
+    <value>
+      $10
+    </value>
+  </const>
+  <const name="SERIAL_STATE_FLAG_BAD_HWID" type="Integer">
+    <value>
+      $20
+    </value>
+  </const>
+  <const name="SERIAL_STATE_FLAG_MAX_BUILD_EXPIRED" type="Integer">
+    <value>
+      $40
+    </value>
+  </const>
+  <procedure name="VMProtectBegin" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="MarkerName" type="PAnsiChar" />
+    </parameters>
+  </procedure>
+  <procedure name="VMProtectBeginVirtualization" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="MarkerName" type="PAnsiChar" />
+    </parameters>
+  </procedure>
+  <procedure name="VMProtectBeginMutation" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="MarkerName" type="PAnsiChar" />
+    </parameters>
+  </procedure>
+  <procedure name="VMProtectBeginUltra" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="MarkerName" type="PAnsiChar" />
+    </parameters>
+  </procedure>
+  <procedure name="VMProtectEnd" visibility="public" callconv="stdcall">
+  </procedure>
+  <function name="VMProtectIsDebuggerPresent" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="CheckKernelMode" type="Boolean" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="VMProtectIsVirtualMachinePresent" visibility="public" callconv="stdcall">
+    <parameters>
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="VMProtectIsValidImageCRC" visibility="public" callconv="stdcall">
+    <parameters>
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="VMProtectDecryptStringA" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="Value" type="PAnsiChar" />
+      <retval type="PAnsiChar" />
+    </parameters>
+  </function>
+  <function name="VMProtectDecryptStringW" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="Value" type="PWideChar" />
+      <retval type="PWideChar" />
+    </parameters>
+  </function>
+  <function name="VMProtectSetSerialNumber" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="SerialNumber" type="PAnsiChar" />
+      <retval type="Cardinal" />
+    </parameters>
+  </function>
+  <function name="VMProtectGetSerialNumberState" visibility="public" callconv="stdcall">
+    <parameters>
+      <retval type="Cardinal" />
+    </parameters>
+  </function>
+  <function name="VMProtectGetSerialNumberData" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="Data" type="PVMProtectSerialNumberData" />
+      <parameter name="DataSize" type="Integer" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <function name="VMProtectGetCurrentHWID" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="Buffer" type="PAnsiChar" />
+      <parameter name="BufferLen" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+</namespace>

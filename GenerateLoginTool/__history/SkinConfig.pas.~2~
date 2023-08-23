@@ -1,0 +1,14 @@
+unit SkinConfig;
+
+interface
+
+type
+
+  LabelConf = record
+    Left: Word;
+    Top: Word;
+  end;
+
+implementation
+
+end.

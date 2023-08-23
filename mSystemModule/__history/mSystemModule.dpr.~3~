@@ -1,0 +1,209 @@
+library mSystemModule;
+
+uses
+  FastMM4,
+  Windows,
+  SysUtils,
+  Classes,
+  tlhelp32,
+  PsAPI,
+  Module in 'Module.pas',
+  ClassModule in 'ClassModule.pas',
+  PlugManage in 'PlugManage.pas',
+  PlugPin in 'PlugPin.pas',
+  HUtil32 in '..\Common\HUtil32.pas',
+  SDK in '..\Common\SDK.pas',
+  D7ScktComp in '..\Common\D7ScktComp.pas',
+  Share in 'Share.pas',
+  DESUnit in '..\Common\DESUnit.pas',
+  EDcode in '..\Common\EDcode.pas',
+  Grobal2 in '..\Common\Grobal2.pas',
+  MD5 in '..\Common\MD5.pas',
+  ipinfo_dll in 'ipinfo_dll.pas',
+  MudUtil in '..\M2Server\MudUtil.pas';
+
+{$R *.res}
+
+function StartPlug(Config: pTConfig): Boolean;
+begin
+  PlugEngine := TPlugManage.Create(True);
+  PlugEngine.FreeOnTerminate := True;
+  Result := PlugEngine.LoadUserLicense();
+  g_Config := Config;
+  PlugEngine.Resume;
+end;
+
+function M2ServerVersion(): Single; stdcall;
+begin
+  Result := DLLVersion;
+end;
+
+function Init(AppHandle: HWnd; MsgProc: TMsgProc; FindProc: TFindProc; SetProc: TSetProc; FindObj: TFindObj): PChar; stdcall;
+const
+  sSetLicense               = 'SetLicense';
+  sGetSelfCrc               = 'GetSelfCrc';
+  sChangeLabelVerColor      = 'ChangeLabelVerColor';
+  sGetResourceString        = 'GetResourceString';
+  sGetExVersionNO           = 'GetExVersionNO';
+  sGetGoldShape             = 'GetGoldShape';
+var
+  hParentProcess            : THandle;
+  szBuffer, ParentName      : array[0..MAX_PATH - 1] of Char;
+  Len                       : DWORD;
+  ParentPID                 : ULONG;
+  nModule                   : HMODULE;
+  ZwQueryInformationProcess : TZW_QUERY_INFORMATION_PROCESS;
+  ProcessInfo               : PROCESS_BASIC_INFORMATION;
+  Status                    : NTSTATUS;
+
+  Year, Month, Day          : Word;
+  Str, sDlls                : string;
+  bHook                     : Boolean;
+  mHandle                   : THandle;
+  PID                       : DWORD;
+  FModuleEntry32            : TModuleEntry32;
+
+  i, j                      : Integer;
+  nCount                    : Integer;
+  mList                     : TStringList;
+  pidNeeded, modNeeded      : DWORD;
+  MODList                   : array[0..1000] of HInst;
+  PIDName                   : array[0..MAX_PATH - 1] of Char;
+  MODName                   : array[0..MAX_PATH - 1] of Char;
+  PH                        : THandle;
+  aThreadID                 : DWORD;
+  aProcessID                : DWORD;
+
+  pAI, pWork                : pIPAdapterInfo;
+  nSize                     : Integer;
+  nRes                      : Integer;
+  pIPAddr                   : pIPAddrString;
+begin
+  if Assigned(MsgProc) then
+    MainOutMessage := MsgProc;
+  try
+    FindProcTable := FindProc;
+    FindObjTable := FindObj;
+    SetProcTable := SetProc;
+
+
+
+    bHook := False;
+    sDlls := ('IPLocal.dll mPlugOfScript.dll mPlugOfEngine.dll mSystemModule.dll mPlugOfAccess.dll');
+    GetWindowThreadProcessId(AppHandle, PID);
+    mHandle := CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, PID);
+    if mHandle <> 0 then begin
+      FModuleEntry32.dwSize := SizeOf(TModuleEntry32);
+      if Module32First(mHandle, FModuleEntry32) then begin
+        while Module32Next(mHandle, FModuleEntry32) do begin
+          if LowerCase(Trim(ExtractFilePath(FModuleEntry32.szExePath))) = LowerCase(ExtractFilePath(ParamStr(0))) then begin
+            if Pos(LowerCase(ExtractFileName(FModuleEntry32.szModule)), LowerCase(sDlls)) <= 0 then begin
+              bHook := True;
+              Break;
+            end;
+          end;
+        end;
+      end;
+      CloseHandle(mHandle);
+    end else
+      bHook := True;
+
+    if not bHook then begin
+
+      GetWindowThreadProcessId(AppHandle, PID);
+      mHandle := CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, PID);
+      if mHandle <> 0 then begin
+        FModuleEntry32.dwSize := SizeOf(TModuleEntry32);
+        if Module32First(mHandle, FModuleEntry32) then begin
+          mList := TStringList.Create;
+          nCount := 0;
+          while Module32Next(mHandle, FModuleEntry32) do begin
+            Str := LowerCase(ExtractFileName(FModuleEntry32.szModule));
+            if CompareText(Str, ('comctl32.dll')) = 0 then Continue;
+            if mList.IndexOf(Str) > -1 then begin //Exists
+              Inc(nCount);
+            end else begin
+              mList.Add(Str);
+            end;
+          end;
+          mList.Free;
+          if nCount = 0 then begin
+            DecodeDate(Date, Year, Month, Day);
+            if ((Year >= ENDYEAR^) and ((Month * 30 + Day) > ENDMONTH^ * 30 + ENDDAY^)) or
+              ((Year <= ENDYEARMIN^) and ((Month * 30 + Day) < ENDMONTHMIN^ * 30 + ENDDAYMIN^)) then begin
+              //g_DConfig.boExpired := True;
+            end else begin
+
+              MainOutMessage(PChar(g_DConfig.s_LoadPlugOk), Length(g_DConfig.s_LoadPlugOk), 0);
+              Result := PChar(g_DConfig.s_PluginName);
+
+              SocketRun := GetProcAddr('TRunSocket.Run'); {TRunSocket.Run'}
+              SetLicense := GetProcAddr(sSetLicense);
+              GetSelfCrc := GetProcAddr(sGetSelfCrc);
+              PlugRunOver := GetProcAddr('PlugRunOver'); {PlugRunOver}
+              SetRemoteXORKey := GetProcAddr('SetRemoteXORKey'); {SetRemoteXORKey}
+              GetVersion := GetProcAddr('GetVersion'); {GetVersion}
+              EngineRun := GetProcAddr('TUserEngine.Run'); {TUserEngine.Run}
+              ChangeCaptionText := GetProcAddr('ChangeCaptionText'); {ChangeCaptionText}
+              ChangeLabelVerColor := GetProcAddr(sChangeLabelVerColor);
+              SetProcAddr(@GetResourceString, (sGetResourceString));
+              SetProcAddr(@GetExVersionNO, (sGetExVersionNO));
+              SetProcAddr(@GetGoldShape, (sGetGoldShape));
+              SetProcAddr(@TRunSocket.Run, ('TRunSocket.Run')); {TRunSocket.Run}
+              SetProcAddr(@StartPlug, ('StartPlug') {StartPlug});
+              SetProcAddr(@M2ServerVersion, ('M2ServerVersion') {'M2ServerVersion'});
+              SetProcAddr(@GetLicenseInfo, ('GetLicenseInfo') {'GetLicenseInfo'});
+              SetProcAddr(@TUserEngine.Run, ('TUserEngine.Run')); {TUserEngine.Run}
+              SetProcAddr(@GetNextDirection, ('PulgProc01'));
+              SetProcAddr(@GetValNameNo, ('PulgProc02'));
+              SetProcAddr(@CheckUserItems, ('PulgProc03'));
+              SetProcAddr(@GetItemNumber, ('PulgProc04'));
+              SetProcAddr(@GetItemNumberEx, ('PulgProc05'));
+              SetProcAddr(@FilterShowName, ('PulgProc06'));
+              SetProcAddr(@CheckGuildName, ('PulgProc07'));
+              SetProcAddr(@GetLocalIP,('GetLocalIP'));
+              //SetProcAddr(@GetWanIPAdress, 'GetWanIPAdress');
+
+              if Assigned(GetVersion) then
+                g_DConfig.fVersion := GetVersion();
+              GetXORKey := GetProcAddr('GetXORKey');
+              //end;
+            //end;
+            //CloseHandle(hParentProcess);
+          //end;
+        //end;
+      //end;
+    //end;
+            end;
+          end;
+        end;
+        CloseHandle(mHandle);
+      end;
+    end;
+  except
+  end;
+end;
+
+procedure UnInit();
+begin
+  //MainOutMessage(PChar('卸载插件管理器成功...'), Length('卸载插件管理器成功...'), 0);
+  if PlugEngine.ClientSocket <> nil then
+    PlugEngine.ClientSocket.Free;
+  PlugEngine.Terminate;
+  FreeMem(ProcBlock);
+end;
+
+function GetFunAddr(nIndex: Integer): Pointer; stdcall;
+begin
+  Result := nil;
+  if (nIndex >= 0) and (nIndex < High(ProcArray)) then
+    Result := ProcArray[nIndex];
+end;
+
+exports
+  Init, UnInit, GetFunAddr;
+begin
+  MainOutMessage := OutMessage;
+  IsExpired();
+end.
+

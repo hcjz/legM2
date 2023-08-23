@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<namespace name="MD5">
+  <array name="MD5Count" low="0" high="1">
+    <element type="Cardinal" />
+  </array>
+  <array name="MD5State" low="0" high="3">
+    <element type="Cardinal" />
+  </array>
+  <array name="MD5Block" low="0" high="15">
+    <element type="Cardinal" />
+  </array>
+  <array name="MD5CBits" low="0" high="7">
+    <element type="Byte" />
+  </array>
+  <array name="MD5Digest" low="0" high="15">
+    <element type="Byte" />
+  </array>
+  <pointer name="PMD5Digest" type="MD5Digest" indircnt="1" />
+  <array name="MD5Buffer" low="0" high="63">
+    <element type="Byte" />
+  </array>
+  <struct name="MD5Context">
+    <field name="State" type="MD5State" visibility="public" />
+    <field name="Count" type="MD5Count" visibility="public" />
+    <field name="Buffer" type="MD5Buffer" visibility="public" />
+  </struct>
+  <variable name="g_MD5EmptyDigest" type="MD5Digest" visibility="public" />
+  <procedure name="MD5Init" visibility="public">
+    <parameters>
+      <parameter name="Context" type="MD5Context" paramflags="var" />
+    </parameters>
+  </procedure>
+  <procedure name="MD5Update" visibility="public">
+    <parameters>
+      <parameter name="Context" type="MD5Context" paramflags="var" />
+      <parameter name="Input" type="PAnsiChar" />
+      <parameter name="Length" type="Cardinal" />
+    </parameters>
+  </procedure>
+  <procedure name="MD5Final" visibility="public">
+    <parameters>
+      <parameter name="Context" type="MD5Context" paramflags="var" />
+      <parameter name="Digest" type="MD5Digest" paramflags="var" />
+    </parameters>
+  </procedure>
+  <function name="MD5String" visibility="public">
+    <parameters>
+      <parameter name="m" type="string" />
+      <retval type="MD5Digest" />
+    </parameters>
+  </function>
+  <function name="MD5File" visibility="public">
+    <parameters>
+      <parameter name="n" type="string" />
+      <retval type="MD5Digest" />
+    </parameters>
+  </function>
+  <function name="MD5Print" visibility="public">
+    <parameters>
+      <parameter name="d" type="MD5Digest" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="MD5UnPrint" visibility="public">
+    <parameters>
+      <parameter name="s" type="string" />
+      <retval type="MD5Digest" />
+    </parameters>
+  </function>
+  <function name="MD5Match" visibility="public">
+    <parameters>
+      <parameter name="D1" type="MD5Digest" />
+      <parameter name="D2" type="MD5Digest" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+</namespace>

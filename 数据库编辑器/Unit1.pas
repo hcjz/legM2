@@ -1,0 +1,117 @@
+unit Unit1;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, DBTables, DB, StdCtrls, Grids, DBGrids, ComCtrls;
+
+type
+  TDBEditForm = class(TForm)
+    Table1: TTable;
+    BDPage: TPageControl;
+    Magic: TTabSheet;
+    Monster: TTabSheet;
+    StdItems: TTabSheet;
+    DBMag: TDBGrid;
+    DBMon: TDBGrid;
+    DBGrid1: TDBGrid;
+    Query1: TQuery;
+    DataSource1: TDataSource;
+    ComboBox1: TComboBox;
+    procedure FormCreate(Sender: TObject);
+    procedure BDPageChange(Sender: TObject);
+    procedure DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure ComboBox1Change(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  DBEditForm: TDBEditForm;
+implementation
+
+{$R *.dfm}
+
+procedure TDBEditForm.FormCreate(Sender: TObject);
+var
+  ap: tStringList;
+begin
+  ap := tstringlist.Create;
+  session.GetAliasNames(ap);
+  if (ap.IndexOf('HeroDB') = -1) then
+    if application.messagebox('没检测到"HeroDB"数据源是否创建', '询问', 65) <> IDCANCEL then
+      session.AddStandardAlias('HeroDB', 'D:\MirServer\Mud2\DB', 'PARADOX');
+  session.SaveConfigFile;
+  Table1.TableName := 'StdItems.DB';
+  Table1.Active := true;
+end;
+
+procedure TDBEditForm.BDPageChange(Sender: TObject);
+begin
+  case BDPage.ActivePageIndex of
+    0:
+      begin
+        Table1.Active := false;
+        table1.Filter := '';
+        ComboBox1.Visible := false;
+        Table1.TableName := 'Magic.DB';
+        Table1.Active := true;
+      end;
+    1:
+      begin
+        Table1.Active := false;
+        table1.Filter := '';
+        ComboBox1.Visible := false;
+        Table1.TableName := 'Monster.DB';
+        Table1.Active := true;
+      end;
+    2:
+      begin
+        ComboBox1.Enabled := true;
+        ComboBox1.Visible := True;
+        Table1.Active := false;
+        Table1.TableName := 'StdItems.DB';
+        Table1.Active := true;
+      end;
+  end;
+end;
+
+
+procedure TDBEditForm.ComboBox1Change(Sender: TObject);
+var
+  Stdmode: integer;
+  s, s2: string;
+begin
+  if BDPage.ActivePageIndex <> 2 then
+    exit;
+  s := copy(ComboBox1.Text, 1, 1);
+  s2 := copy(ComboBox1.Text, 2, 1);
+  if (s2 <> '') and (s2 <> ' ') then
+    s := s + s2;
+  Stdmode := strtoint(s);
+  try
+    table1.Filter := 'Stdmode=' + inttostr(Stdmode);
+    table1.Filtered := true;
+  finally
+  end;
+end;
+
+procedure TDBEditForm.DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
+var
+  field: tfield;
+  str: string;
+begin
+  if Table1.TableName = 'StdItems.DB' then
+  begin
+    field := DBGrid1.DataSource.DataSet.FieldByName('Stdmode');
+    str := field.AsString;
+  end;
+  DBGrid1.DefaultDrawColumnCell(Rect, DataCol, Column, State);
+end;
+
+end.
+

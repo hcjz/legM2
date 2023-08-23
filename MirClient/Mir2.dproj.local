@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2018/10/18 22:18:49.243.bdsproj,D:\LegendM2\Source\MirClient_saki\mir2.bdsproj=D:\LegendM2\Source\MirClient_saki\Mir2_Saki.bdsproj</Transaction>
+    <Transaction>2018/11/13 10:41:02.821.bdsproj,D:\LegendM2\Source\MirClient_MyHGE\Mir2_Saki.bdsproj=D:\LegendM2\Source\MirClient_MyHGE\Mir2_MyHGE.bdsproj</Transaction>
+    <Transaction>2018/11/13 11:00:40.283.bdsproj,D:\LegendM2\Source\MirClient_MyHGE\Mir2_MyHGE.bdsproj=D:\LegendM2\Source\MirClient_MyHGE\Mir2_Test.bdsproj</Transaction>
+    <Transaction>2019/01/07 12:18:07.588.pas,D:\LEGEND for HGE\Common\uSMBIOS.pas=</Transaction>
+    <Transaction>2019/01/07 12:18:10.487.pas,D:\LEGEND for HGE\Common\uDiskSN.pas=</Transaction>
+    <Transaction>2019/01/07 12:18:13.323.pas,D:\LEGEND for HGE\Common\MD5.pas=</Transaction>
+    <Transaction>2019/01/09 16:56:13.544.dproj,D:\LEGEND for HGE\MirClient\Mir2_Test.dproj=D:\LEGEND for HGE\MirClient\Mir2_Test.dproj</Transaction>
+    <Transaction>2019/01/09 17:06:37.462.dproj,D:\LEGEND for HGE\MirClient\Mir2_Test.dproj=D:\LEGEND for HGE\MirClient\Mir2_Test.dproj</Transaction>
+    <Transaction>2019/01/12 00:55:18.192.dproj,D:\LEGEND for HGE\MirClient - 调试\Mir2_Test.dproj=D:\LEGEND for HGE\MirClient - 调试\Mir2.dproj</Transaction>
+    <Transaction>2019/01/15 01:38:12.112.dproj,D:\LEGEND for HGE\MirClient\Mir2.dproj=D:\LEGEND for HGE\MirClient\Mir2.dproj</Transaction>
+    <Transaction>2019/02/08 17:24:19.616.dproj,D:\LEGEND for HGE\MirClient\Mir2.dproj=D:\LEGEND for HGE\MirClient\Mir2.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

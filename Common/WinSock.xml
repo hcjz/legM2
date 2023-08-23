@@ -1,0 +1,2020 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<namespace name="WinSock">
+  <type name="u_char" type="Char" />
+  <const name="FD_SETSIZE" type="Integer">
+    <value>
+      $40
+    </value>
+  </const>
+  <const name="SD_RECEIVE" type="Integer">
+    <value>
+      $0
+    </value>
+  </const>
+  <const name="SD_SEND" type="Integer">
+    <value>
+      $1
+    </value>
+  </const>
+  <const name="SD_BOTH" type="Integer">
+    <value>
+      $2
+    </value>
+  </const>
+  <pointer name="PFDSet" type="TFDSet" indircnt="1" />
+  <struct name="TFDSet">
+    <field name="fd_count" type="Integer" visibility="public" />
+    <field name="fd_array" visibility="public">
+      <array name="fd_array" low="0" high="63">
+        <element type="Integer" />
+      </array>
+    </field>
+  </struct>
+  <pointer name="PTimeVal" type="timeval" indircnt="1" />
+  <struct name="timeval">
+    <field name="tv_sec" type="Integer" visibility="public" />
+    <field name="tv_usec" type="Integer" visibility="public" />
+  </struct>
+  <struct name="TTimeVal" alias="timeval" namespace="WinSock">
+    <field name="tv_sec" type="Integer" visibility="public" />
+    <field name="tv_usec" type="Integer" visibility="public" />
+  </struct>
+  <const name="IOCPARM_MASK" type="Integer">
+    <value>
+      $7F
+    </value>
+  </const>
+  <const name="IOC_VOID" type="Integer">
+    <value>
+      $20000000
+    </value>
+  </const>
+  <const name="IOC_OUT" type="Integer">
+    <value>
+      $40000000
+    </value>
+  </const>
+  <const name="IOC_IN" type="Integer">
+    <value>
+      $80000000
+    </value>
+  </const>
+  <const name="IOC_INOUT" type="Integer">
+    <value>
+      $C0000000
+    </value>
+  </const>
+  <const name="FIONREAD" type="Integer">
+    <value>
+      $4004667F
+    </value>
+  </const>
+  <const name="FIONBIO" type="Integer">
+    <value>
+      $8004667E
+    </value>
+  </const>
+  <const name="FIOASYNC" type="Integer">
+    <value>
+      $8004667D
+    </value>
+  </const>
+  <pointer name="PHostEnt" type="hostent" indircnt="1" />
+  <struct name="hostent">
+    <field name="h_name" type="PAnsiChar" visibility="public" />
+    <field name="h_aliases" visibility="public">
+      <pointer name="h_aliases" type="PAnsiChar" indircnt="1" />
+    </field>
+    <field name="h_addrtype" type="Smallint" visibility="public" />
+    <field name="h_length" type="Smallint" visibility="public" />
+  </struct>
+  <struct name="THostEnt" alias="hostent" namespace="WinSock">
+    <field name="h_name" type="PAnsiChar" visibility="public" />
+    <field name="h_aliases" visibility="public">
+      <pointer name="h_aliases" type="PAnsiChar" indircnt="1" />
+    </field>
+    <field name="h_addrtype" type="Smallint" visibility="public" />
+    <field name="h_length" type="Smallint" visibility="public" />
+  </struct>
+  <pointer name="PNetEnt" type="netent" indircnt="1" />
+  <struct name="netent">
+    <field name="n_name" type="PAnsiChar" visibility="public" />
+    <field name="n_aliases" visibility="public">
+      <pointer name="n_aliases" type="PAnsiChar" indircnt="1" />
+    </field>
+    <field name="n_addrtype" type="Smallint" visibility="public" />
+    <field name="n_net" type="Integer" visibility="public" />
+  </struct>
+  <struct name="TNetEnt" alias="netent" namespace="WinSock">
+    <field name="n_name" type="PAnsiChar" visibility="public" />
+    <field name="n_aliases" visibility="public">
+      <pointer name="n_aliases" type="PAnsiChar" indircnt="1" />
+    </field>
+    <field name="n_addrtype" type="Smallint" visibility="public" />
+    <field name="n_net" type="Integer" visibility="public" />
+  </struct>
+  <pointer name="PServEnt" type="servent" indircnt="1" />
+  <struct name="servent">
+    <field name="s_name" type="PAnsiChar" visibility="public" />
+    <field name="s_aliases" visibility="public">
+      <pointer name="s_aliases" type="PAnsiChar" indircnt="1" />
+    </field>
+    <field name="s_port" type="Word" visibility="public" />
+    <field name="s_proto" type="PAnsiChar" visibility="public" />
+  </struct>
+  <struct name="TServEnt" alias="servent" namespace="WinSock">
+    <field name="s_name" type="PAnsiChar" visibility="public" />
+    <field name="s_aliases" visibility="public">
+      <pointer name="s_aliases" type="PAnsiChar" indircnt="1" />
+    </field>
+    <field name="s_port" type="Word" visibility="public" />
+    <field name="s_proto" type="PAnsiChar" visibility="public" />
+  </struct>
+  <pointer name="PProtoEnt" type="protoent" indircnt="1" />
+  <struct name="protoent">
+    <field name="p_name" type="PAnsiChar" visibility="public" />
+    <field name="p_aliases" visibility="public">
+      <pointer name="p_aliases" type="PAnsiChar" indircnt="1" />
+    </field>
+    <field name="p_proto" type="Smallint" visibility="public" />
+  </struct>
+  <struct name="TProtoEnt" alias="protoent" namespace="WinSock">
+    <field name="p_name" type="PAnsiChar" visibility="public" />
+    <field name="p_aliases" visibility="public">
+      <pointer name="p_aliases" type="PAnsiChar" indircnt="1" />
+    </field>
+    <field name="p_proto" type="Smallint" visibility="public" />
+  </struct>
+  <const name="IPPROTO_IP" type="Integer">
+    <value>
+      $0
+    </value>
+  </const>
+  <const name="IPPROTO_ICMP" type="Integer">
+    <value>
+      $1
+    </value>
+  </const>
+  <const name="IPPROTO_IGMP" type="Integer">
+    <value>
+      $2
+    </value>
+  </const>
+  <const name="IPPROTO_GGP" type="Integer">
+    <value>
+      $3
+    </value>
+  </const>
+  <const name="IPPROTO_TCP" type="Integer">
+    <value>
+      $6
+    </value>
+  </const>
+  <const name="IPPROTO_PUP" type="Integer">
+    <value>
+      $C
+    </value>
+  </const>
+  <const name="IPPROTO_UDP" type="Integer">
+    <value>
+      $11
+    </value>
+  </const>
+  <const name="IPPROTO_IDP" type="Integer">
+    <value>
+      $16
+    </value>
+  </const>
+  <const name="IPPROTO_ND" type="Integer">
+    <value>
+      $4D
+    </value>
+  </const>
+  <const name="IPPROTO_RAW" type="Integer">
+    <value>
+      $FF
+    </value>
+  </const>
+  <const name="IPPROTO_MAX" type="Integer">
+    <value>
+      $100
+    </value>
+  </const>
+  <const name="IPPORT_ECHO" type="Integer">
+    <value>
+      $7
+    </value>
+  </const>
+  <const name="IPPORT_DISCARD" type="Integer">
+    <value>
+      $9
+    </value>
+  </const>
+  <const name="IPPORT_SYSTAT" type="Integer">
+    <value>
+      $B
+    </value>
+  </const>
+  <const name="IPPORT_DAYTIME" type="Integer">
+    <value>
+      $D
+    </value>
+  </const>
+  <const name="IPPORT_NETSTAT" type="Integer">
+    <value>
+      $F
+    </value>
+  </const>
+  <const name="IPPORT_FTP" type="Integer">
+    <value>
+      $15
+    </value>
+  </const>
+  <const name="IPPORT_TELNET" type="Integer">
+    <value>
+      $17
+    </value>
+  </const>
+  <const name="IPPORT_SMTP" type="Integer">
+    <value>
+      $19
+    </value>
+  </const>
+  <const name="IPPORT_TIMESERVER" type="Integer">
+    <value>
+      $25
+    </value>
+  </const>
+  <const name="IPPORT_NAMESERVER" type="Integer">
+    <value>
+      $2A
+    </value>
+  </const>
+  <const name="IPPORT_WHOIS" type="Integer">
+    <value>
+      $2B
+    </value>
+  </const>
+  <const name="IPPORT_MTP" type="Integer">
+    <value>
+      $39
+    </value>
+  </const>
+  <const name="IPPORT_TFTP" type="Integer">
+    <value>
+      $45
+    </value>
+  </const>
+  <const name="IPPORT_RJE" type="Integer">
+    <value>
+      $4D
+    </value>
+  </const>
+  <const name="IPPORT_FINGER" type="Integer">
+    <value>
+      $4F
+    </value>
+  </const>
+  <const name="IPPORT_TTYLINK" type="Integer">
+    <value>
+      $57
+    </value>
+  </const>
+  <const name="IPPORT_SUPDUP" type="Integer">
+    <value>
+      $5F
+    </value>
+  </const>
+  <const name="IPPORT_EXECSERVER" type="Integer">
+    <value>
+      $200
+    </value>
+  </const>
+  <const name="IPPORT_LOGINSERVER" type="Integer">
+    <value>
+      $201
+    </value>
+  </const>
+  <const name="IPPORT_CMDSERVER" type="Integer">
+    <value>
+      $202
+    </value>
+  </const>
+  <const name="IPPORT_EFSSERVER" type="Integer">
+    <value>
+      $208
+    </value>
+  </const>
+  <const name="IPPORT_BIFFUDP" type="Integer">
+    <value>
+      $200
+    </value>
+  </const>
+  <const name="IPPORT_WHOSERVER" type="Integer">
+    <value>
+      $201
+    </value>
+  </const>
+  <const name="IPPORT_ROUTESERVER" type="Integer">
+    <value>
+      $208
+    </value>
+  </const>
+  <const name="IPPORT_RESERVED" type="Integer">
+    <value>
+      $400
+    </value>
+  </const>
+  <const name="IMPLINK_IP" type="Integer">
+    <value>
+      $9B
+    </value>
+  </const>
+  <const name="IMPLINK_LOWEXPER" type="Integer">
+    <value>
+      $9C
+    </value>
+  </const>
+  <const name="IMPLINK_HIGHEXPER" type="Integer">
+    <value>
+      $9E
+    </value>
+  </const>
+  <struct name="SunB" packed="true">
+    <field name="s_b1" type="Char" visibility="public" />
+    <field name="s_b2" type="Char" visibility="public" />
+    <field name="s_b3" type="Char" visibility="public" />
+    <field name="s_b4" type="Char" visibility="public" />
+  </struct>
+  <struct name="SunW" packed="true">
+    <field name="s_w1" type="Word" visibility="public" />
+    <field name="s_w2" type="Word" visibility="public" />
+  </struct>
+  <pointer name="PInAddr" type="in_addr" indircnt="1" />
+  <struct name="in_addr">
+    <field name="S_un_b" type="SunB" visibility="public" />
+  </struct>
+  <struct name="TInAddr" alias="in_addr" namespace="WinSock">
+    <field name="S_un_b" type="SunB" visibility="public" />
+  </struct>
+  <pointer name="PSockAddrIn" type="sockaddr_in" indircnt="1" />
+  <struct name="sockaddr_in">
+    <field name="sin_family" type="Word" visibility="public" />
+    <field name="sin_port" type="Word" visibility="public" />
+    <field name="sin_addr" type="in_addr" visibility="public" />
+  </struct>
+  <struct name="TSockAddrIn" alias="sockaddr_in" namespace="WinSock">
+    <field name="sin_family" type="Word" visibility="public" />
+    <field name="sin_port" type="Word" visibility="public" />
+    <field name="sin_addr" type="in_addr" visibility="public" />
+  </struct>
+  <const name="INADDR_ANY" type="Integer">
+    <value>
+      $0
+    </value>
+  </const>
+  <const name="INADDR_LOOPBACK" type="Integer">
+    <value>
+      $7F000001
+    </value>
+  </const>
+  <const name="INADDR_BROADCAST" type="Integer">
+    <value>
+      $FFFFFFFF
+    </value>
+  </const>
+  <const name="INADDR_NONE" type="Integer">
+    <value>
+      $FFFFFFFF
+    </value>
+  </const>
+  <const name="WSADESCRIPTION_LEN" type="Integer">
+    <value>
+      $100
+    </value>
+  </const>
+  <const name="WSASYS_STATUS_LEN" type="Integer">
+    <value>
+      $80
+    </value>
+  </const>
+  <pointer name="PWSAData" type="WSAData" indircnt="1" />
+  <struct name="WSAData">
+    <field name="wVersion" type="Word" visibility="public" />
+    <field name="wHighVersion" type="Word" visibility="public" />
+    <field name="szDescription" visibility="public">
+      <array name="szDescription" low="0" high="256">
+        <element type="Char" />
+      </array>
+    </field>
+    <field name="szSystemStatus" visibility="public">
+      <array name="szSystemStatus" low="0" high="128">
+        <element type="Char" />
+      </array>
+    </field>
+    <field name="iMaxSockets" type="Word" visibility="public" />
+    <field name="iMaxUdpDg" type="Word" visibility="public" />
+    <field name="lpVendorInfo" type="PAnsiChar" visibility="public" />
+  </struct>
+  <struct name="TWSAData" alias="WSAData" namespace="WinSock">
+    <field name="wVersion" type="Word" visibility="public" />
+    <field name="wHighVersion" type="Word" visibility="public" />
+    <field name="szDescription" visibility="public">
+      <array name="szDescription" low="0" high="256">
+        <element type="Char" />
+      </array>
+    </field>
+    <field name="szSystemStatus" visibility="public">
+      <array name="szSystemStatus" low="0" high="128">
+        <element type="Char" />
+      </array>
+    </field>
+    <field name="iMaxSockets" type="Word" visibility="public" />
+    <field name="iMaxUdpDg" type="Word" visibility="public" />
+    <field name="lpVendorInfo" type="PAnsiChar" visibility="public" />
+  </struct>
+  <pointer name="PTransmitFileBuffers" type="_TRANSMIT_FILE_BUFFERS" indircnt="1" />
+  <struct name="_TRANSMIT_FILE_BUFFERS">
+    <field name="Head" type="Pointer" visibility="public" />
+    <field name="HeadLength" type="Cardinal" visibility="public" />
+    <field name="Tail" type="Pointer" visibility="public" />
+    <field name="TailLength" type="Cardinal" visibility="public" />
+  </struct>
+  <struct name="TTransmitFileBuffers" alias="_TRANSMIT_FILE_BUFFERS" namespace="WinSock">
+    <field name="Head" type="Pointer" visibility="public" />
+    <field name="HeadLength" type="Cardinal" visibility="public" />
+    <field name="Tail" type="Pointer" visibility="public" />
+    <field name="TailLength" type="Cardinal" visibility="public" />
+  </struct>
+  <struct name="TRANSMIT_FILE_BUFFERS" alias="_TRANSMIT_FILE_BUFFERS" namespace="WinSock">
+    <field name="Head" type="Pointer" visibility="public" />
+    <field name="HeadLength" type="Cardinal" visibility="public" />
+    <field name="Tail" type="Pointer" visibility="public" />
+    <field name="TailLength" type="Cardinal" visibility="public" />
+  </struct>
+  <const name="TF_DISCONNECT" type="Integer">
+    <value>
+      $1
+    </value>
+  </const>
+  <const name="TF_REUSE_SOCKET" type="Integer">
+    <value>
+      $2
+    </value>
+  </const>
+  <const name="TF_WRITE_BEHIND" type="Integer">
+    <value>
+      $4
+    </value>
+  </const>
+  <const name="IP_OPTIONS" type="Integer">
+    <value>
+      $1
+    </value>
+  </const>
+  <const name="IP_MULTICAST_IF" type="Integer">
+    <value>
+      $2
+    </value>
+  </const>
+  <const name="IP_MULTICAST_TTL" type="Integer">
+    <value>
+      $3
+    </value>
+  </const>
+  <const name="IP_MULTICAST_LOOP" type="Integer">
+    <value>
+      $4
+    </value>
+  </const>
+  <const name="IP_ADD_MEMBERSHIP" type="Integer">
+    <value>
+      $5
+    </value>
+  </const>
+  <const name="IP_DROP_MEMBERSHIP" type="Integer">
+    <value>
+      $6
+    </value>
+  </const>
+  <const name="IP_TTL" type="Integer">
+    <value>
+      $7
+    </value>
+  </const>
+  <const name="IP_TOS" type="Integer">
+    <value>
+      $8
+    </value>
+  </const>
+  <const name="IP_DONTFRAGMENT" type="Integer">
+    <value>
+      $9
+    </value>
+  </const>
+  <const name="IP_DEFAULT_MULTICAST_TTL" type="Integer">
+    <value>
+      $1
+    </value>
+  </const>
+  <const name="IP_DEFAULT_MULTICAST_LOOP" type="Integer">
+    <value>
+      $1
+    </value>
+  </const>
+  <const name="IP_MAX_MEMBERSHIPS" type="Integer">
+    <value>
+      $14
+    </value>
+  </const>
+  <const name="INVALID_SOCKET" type="Integer">
+    <value>
+      $FFFFFFFF
+    </value>
+  </const>
+  <const name="SOCKET_ERROR" type="Integer">
+    <value>
+      $FFFFFFFF
+    </value>
+  </const>
+  <const name="SOCK_STREAM" type="Integer">
+    <value>
+      $1
+    </value>
+  </const>
+  <const name="SOCK_DGRAM" type="Integer">
+    <value>
+      $2
+    </value>
+  </const>
+  <const name="SOCK_RAW" type="Integer">
+    <value>
+      $3
+    </value>
+  </const>
+  <const name="SOCK_RDM" type="Integer">
+    <value>
+      $4
+    </value>
+  </const>
+  <const name="SOCK_SEQPACKET" type="Integer">
+    <value>
+      $5
+    </value>
+  </const>
+  <const name="SO_DEBUG" type="Integer">
+    <value>
+      $1
+    </value>
+  </const>
+  <const name="SO_ACCEPTCONN" type="Integer">
+    <value>
+      $2
+    </value>
+  </const>
+  <const name="SO_REUSEADDR" type="Integer">
+    <value>
+      $4
+    </value>
+  </const>
+  <const name="SO_KEEPALIVE" type="Integer">
+    <value>
+      $8
+    </value>
+  </const>
+  <const name="SO_DONTROUTE" type="Integer">
+    <value>
+      $10
+    </value>
+  </const>
+  <const name="SO_BROADCAST" type="Integer">
+    <value>
+      $20
+    </value>
+  </const>
+  <const name="SO_USELOOPBACK" type="Integer">
+    <value>
+      $40
+    </value>
+  </const>
+  <const name="SO_LINGER" type="Integer">
+    <value>
+      $80
+    </value>
+  </const>
+  <const name="SO_OOBINLINE" type="Integer">
+    <value>
+      $100
+    </value>
+  </const>
+  <const name="SO_DONTLINGER" type="Integer">
+    <value>
+      $FF7F
+    </value>
+  </const>
+  <const name="SO_SNDBUF" type="Integer">
+    <value>
+      $1001
+    </value>
+  </const>
+  <const name="SO_RCVBUF" type="Integer">
+    <value>
+      $1002
+    </value>
+  </const>
+  <const name="SO_SNDLOWAT" type="Integer">
+    <value>
+      $1003
+    </value>
+  </const>
+  <const name="SO_RCVLOWAT" type="Integer">
+    <value>
+      $1004
+    </value>
+  </const>
+  <const name="SO_SNDTIMEO" type="Integer">
+    <value>
+      $1005
+    </value>
+  </const>
+  <const name="SO_RCVTIMEO" type="Integer">
+    <value>
+      $1006
+    </value>
+  </const>
+  <const name="SO_ERROR" type="Integer">
+    <value>
+      $1007
+    </value>
+  </const>
+  <const name="SO_TYPE" type="Integer">
+    <value>
+      $1008
+    </value>
+  </const>
+  <const name="SO_CONNDATA" type="Integer">
+    <value>
+      $7000
+    </value>
+  </const>
+  <const name="SO_CONNOPT" type="Integer">
+    <value>
+      $7001
+    </value>
+  </const>
+  <const name="SO_DISCDATA" type="Integer">
+    <value>
+      $7002
+    </value>
+  </const>
+  <const name="SO_DISCOPT" type="Integer">
+    <value>
+      $7003
+    </value>
+  </const>
+  <const name="SO_CONNDATALEN" type="Integer">
+    <value>
+      $7004
+    </value>
+  </const>
+  <const name="SO_CONNOPTLEN" type="Integer">
+    <value>
+      $7005
+    </value>
+  </const>
+  <const name="SO_DISCDATALEN" type="Integer">
+    <value>
+      $7006
+    </value>
+  </const>
+  <const name="SO_DISCOPTLEN" type="Integer">
+    <value>
+      $7007
+    </value>
+  </const>
+  <const name="SO_OPENTYPE" type="Integer">
+    <value>
+      $7008
+    </value>
+  </const>
+  <const name="SO_SYNCHRONOUS_ALERT" type="Integer">
+    <value>
+      $10
+    </value>
+  </const>
+  <const name="SO_SYNCHRONOUS_NONALERT" type="Integer">
+    <value>
+      $20
+    </value>
+  </const>
+  <const name="SO_MAXDG" type="Integer">
+    <value>
+      $7009
+    </value>
+  </const>
+  <const name="SO_MAXPATHDG" type="Integer">
+    <value>
+      $700A
+    </value>
+  </const>
+  <const name="SO_UPDATE_ACCEPT_CONTEXT" type="Integer">
+    <value>
+      $700B
+    </value>
+  </const>
+  <const name="SO_CONNECT_TIME" type="Integer">
+    <value>
+      $700C
+    </value>
+  </const>
+  <const name="TCP_NODELAY" type="Integer">
+    <value>
+      $1
+    </value>
+  </const>
+  <const name="TCP_BSDURGENT" type="Integer">
+    <value>
+      $7000
+    </value>
+  </const>
+  <const name="AF_UNSPEC" type="Integer">
+    <value>
+      $0
+    </value>
+  </const>
+  <const name="AF_UNIX" type="Integer">
+    <value>
+      $1
+    </value>
+  </const>
+  <const name="AF_INET" type="Integer">
+    <value>
+      $2
+    </value>
+  </const>
+  <const name="AF_IMPLINK" type="Integer">
+    <value>
+      $3
+    </value>
+  </const>
+  <const name="AF_PUP" type="Integer">
+    <value>
+      $4
+    </value>
+  </const>
+  <const name="AF_CHAOS" type="Integer">
+    <value>
+      $5
+    </value>
+  </const>
+  <const name="AF_IPX" type="Integer">
+    <value>
+      $6
+    </value>
+  </const>
+  <const name="AF_NS" type="Integer">
+    <value>
+      $6
+    </value>
+  </const>
+  <const name="AF_ISO" type="Integer">
+    <value>
+      $7
+    </value>
+  </const>
+  <const name="AF_OSI" type="Integer">
+    <value>
+      $7
+    </value>
+  </const>
+  <const name="AF_ECMA" type="Integer">
+    <value>
+      $8
+    </value>
+  </const>
+  <const name="AF_DATAKIT" type="Integer">
+    <value>
+      $9
+    </value>
+  </const>
+  <const name="AF_CCITT" type="Integer">
+    <value>
+      $A
+    </value>
+  </const>
+  <const name="AF_SNA" type="Integer">
+    <value>
+      $B
+    </value>
+  </const>
+  <const name="AF_DECnet" type="Integer">
+    <value>
+      $C
+    </value>
+  </const>
+  <const name="AF_DLI" type="Integer">
+    <value>
+      $D
+    </value>
+  </const>
+  <const name="AF_LAT" type="Integer">
+    <value>
+      $E
+    </value>
+  </const>
+  <const name="AF_HYLINK" type="Integer">
+    <value>
+      $F
+    </value>
+  </const>
+  <const name="AF_APPLETALK" type="Integer">
+    <value>
+      $10
+    </value>
+  </const>
+  <const name="AF_NETBIOS" type="Integer">
+    <value>
+      $11
+    </value>
+  </const>
+  <const name="AF_VOICEVIEW" type="Integer">
+    <value>
+      $12
+    </value>
+  </const>
+  <const name="AF_FIREFOX" type="Integer">
+    <value>
+      $13
+    </value>
+  </const>
+  <const name="AF_UNKNOWN1" type="Integer">
+    <value>
+      $14
+    </value>
+  </const>
+  <const name="AF_BAN" type="Integer">
+    <value>
+      $15
+    </value>
+  </const>
+  <const name="AF_MAX" type="Integer">
+    <value>
+      $16
+    </value>
+  </const>
+  <pointer name="PSOCKADDR" type="sockaddr_in" indircnt="1" />
+  <struct name="TSockAddr" alias="sockaddr_in" namespace="WinSock">
+    <field name="sin_family" type="Word" visibility="public" />
+    <field name="sin_port" type="Word" visibility="public" />
+    <field name="sin_addr" type="in_addr" visibility="public" />
+  </struct>
+  <pointer name="PSockProto" type="sockproto" indircnt="1" />
+  <struct name="sockproto">
+    <field name="sp_family" type="Word" visibility="public" />
+    <field name="sp_protocol" type="Word" visibility="public" />
+  </struct>
+  <struct name="TSockProto" alias="sockproto" namespace="WinSock">
+    <field name="sp_family" type="Word" visibility="public" />
+    <field name="sp_protocol" type="Word" visibility="public" />
+  </struct>
+  <const name="PF_UNSPEC" type="Integer">
+    <value>
+      $0
+    </value>
+  </const>
+  <const name="PF_UNIX" type="Integer">
+    <value>
+      $1
+    </value>
+  </const>
+  <const name="PF_INET" type="Integer">
+    <value>
+      $2
+    </value>
+  </const>
+  <const name="PF_IMPLINK" type="Integer">
+    <value>
+      $3
+    </value>
+  </const>
+  <const name="PF_PUP" type="Integer">
+    <value>
+      $4
+    </value>
+  </const>
+  <const name="PF_CHAOS" type="Integer">
+    <value>
+      $5
+    </value>
+  </const>
+  <const name="PF_NS" type="Integer">
+    <value>
+      $6
+    </value>
+  </const>
+  <const name="PF_IPX" type="Integer">
+    <value>
+      $6
+    </value>
+  </const>
+  <const name="PF_ISO" type="Integer">
+    <value>
+      $7
+    </value>
+  </const>
+  <const name="PF_OSI" type="Integer">
+    <value>
+      $7
+    </value>
+  </const>
+  <const name="PF_ECMA" type="Integer">
+    <value>
+      $8
+    </value>
+  </const>
+  <const name="PF_DATAKIT" type="Integer">
+    <value>
+      $9
+    </value>
+  </const>
+  <const name="PF_CCITT" type="Integer">
+    <value>
+      $A
+    </value>
+  </const>
+  <const name="PF_SNA" type="Integer">
+    <value>
+      $B
+    </value>
+  </const>
+  <const name="PF_DECnet" type="Integer">
+    <value>
+      $C
+    </value>
+  </const>
+  <const name="PF_DLI" type="Integer">
+    <value>
+      $D
+    </value>
+  </const>
+  <const name="PF_LAT" type="Integer">
+    <value>
+      $E
+    </value>
+  </const>
+  <const name="PF_HYLINK" type="Integer">
+    <value>
+      $F
+    </value>
+  </const>
+  <const name="PF_APPLETALK" type="Integer">
+    <value>
+      $10
+    </value>
+  </const>
+  <const name="PF_VOICEVIEW" type="Integer">
+    <value>
+      $12
+    </value>
+  </const>
+  <const name="PF_FIREFOX" type="Integer">
+    <value>
+      $13
+    </value>
+  </const>
+  <const name="PF_UNKNOWN1" type="Integer">
+    <value>
+      $14
+    </value>
+  </const>
+  <const name="PF_BAN" type="Integer">
+    <value>
+      $15
+    </value>
+  </const>
+  <const name="PF_MAX" type="Integer">
+    <value>
+      $16
+    </value>
+  </const>
+  <pointer name="PLinger" type="linger" indircnt="1" />
+  <struct name="linger">
+    <field name="l_onoff" type="Word" visibility="public" />
+    <field name="l_linger" type="Word" visibility="public" />
+  </struct>
+  <struct name="TLinger" alias="linger" namespace="WinSock">
+    <field name="l_onoff" type="Word" visibility="public" />
+    <field name="l_linger" type="Word" visibility="public" />
+  </struct>
+  <const name="SOL_SOCKET" type="Integer">
+    <value>
+      $FFFF
+    </value>
+  </const>
+  <const name="SOMAXCONN" type="Integer">
+    <value>
+      $5
+    </value>
+  </const>
+  <const name="MSG_OOB" type="Integer">
+    <value>
+      $1
+    </value>
+  </const>
+  <const name="MSG_PEEK" type="Integer">
+    <value>
+      $2
+    </value>
+  </const>
+  <const name="MSG_DONTROUTE" type="Integer">
+    <value>
+      $4
+    </value>
+  </const>
+  <const name="MSG_MAXIOVLEN" type="Integer">
+    <value>
+      $10
+    </value>
+  </const>
+  <const name="MSG_PARTIAL" type="Integer">
+    <value>
+      $8000
+    </value>
+  </const>
+  <const name="MAXGETHOSTSTRUCT" type="Integer">
+    <value>
+      $400
+    </value>
+  </const>
+  <const name="FD_READ" type="Integer">
+    <value>
+      $1
+    </value>
+  </const>
+  <const name="FD_WRITE" type="Integer">
+    <value>
+      $2
+    </value>
+  </const>
+  <const name="FD_OOB" type="Integer">
+    <value>
+      $4
+    </value>
+  </const>
+  <const name="FD_ACCEPT" type="Integer">
+    <value>
+      $8
+    </value>
+  </const>
+  <const name="FD_CONNECT" type="Integer">
+    <value>
+      $10
+    </value>
+  </const>
+  <const name="FD_CLOSE" type="Integer">
+    <value>
+      $20
+    </value>
+  </const>
+  <const name="WSABASEERR" type="Integer">
+    <value>
+      $2710
+    </value>
+  </const>
+  <const name="WSAEINTR" type="Integer">
+    <value>
+      $2714
+    </value>
+  </const>
+  <const name="WSAEBADF" type="Integer">
+    <value>
+      $2719
+    </value>
+  </const>
+  <const name="WSAEACCES" type="Integer">
+    <value>
+      $271D
+    </value>
+  </const>
+  <const name="WSAEFAULT" type="Integer">
+    <value>
+      $271E
+    </value>
+  </const>
+  <const name="WSAEINVAL" type="Integer">
+    <value>
+      $2726
+    </value>
+  </const>
+  <const name="WSAEMFILE" type="Integer">
+    <value>
+      $2728
+    </value>
+  </const>
+  <const name="WSAEWOULDBLOCK" type="Integer">
+    <value>
+      $2733
+    </value>
+  </const>
+  <const name="WSAEINPROGRESS" type="Integer">
+    <value>
+      $2734
+    </value>
+  </const>
+  <const name="WSAEALREADY" type="Integer">
+    <value>
+      $2735
+    </value>
+  </const>
+  <const name="WSAENOTSOCK" type="Integer">
+    <value>
+      $2736
+    </value>
+  </const>
+  <const name="WSAEDESTADDRREQ" type="Integer">
+    <value>
+      $2737
+    </value>
+  </const>
+  <const name="WSAEMSGSIZE" type="Integer">
+    <value>
+      $2738
+    </value>
+  </const>
+  <const name="WSAEPROTOTYPE" type="Integer">
+    <value>
+      $2739
+    </value>
+  </const>
+  <const name="WSAENOPROTOOPT" type="Integer">
+    <value>
+      $273A
+    </value>
+  </const>
+  <const name="WSAEPROTONOSUPPORT" type="Integer">
+    <value>
+      $273B
+    </value>
+  </const>
+  <const name="WSAESOCKTNOSUPPORT" type="Integer">
+    <value>
+      $273C
+    </value>
+  </const>
+  <const name="WSAEOPNOTSUPP" type="Integer">
+    <value>
+      $273D
+    </value>
+  </const>
+  <const name="WSAEPFNOSUPPORT" type="Integer">
+    <value>
+      $273E
+    </value>
+  </const>
+  <const name="WSAEAFNOSUPPORT" type="Integer">
+    <value>
+      $273F
+    </value>
+  </const>
+  <const name="WSAEADDRINUSE" type="Integer">
+    <value>
+      $2740
+    </value>
+  </const>
+  <const name="WSAEADDRNOTAVAIL" type="Integer">
+    <value>
+      $2741
+    </value>
+  </const>
+  <const name="WSAENETDOWN" type="Integer">
+    <value>
+      $2742
+    </value>
+  </const>
+  <const name="WSAENETUNREACH" type="Integer">
+    <value>
+      $2743
+    </value>
+  </const>
+  <const name="WSAENETRESET" type="Integer">
+    <value>
+      $2744
+    </value>
+  </const>
+  <const name="WSAECONNABORTED" type="Integer">
+    <value>
+      $2745
+    </value>
+  </const>
+  <const name="WSAECONNRESET" type="Integer">
+    <value>
+      $2746
+    </value>
+  </const>
+  <const name="WSAENOBUFS" type="Integer">
+    <value>
+      $2747
+    </value>
+  </const>
+  <const name="WSAEISCONN" type="Integer">
+    <value>
+      $2748
+    </value>
+  </const>
+  <const name="WSAENOTCONN" type="Integer">
+    <value>
+      $2749
+    </value>
+  </const>
+  <const name="WSAESHUTDOWN" type="Integer">
+    <value>
+      $274A
+    </value>
+  </const>
+  <const name="WSAETOOMANYREFS" type="Integer">
+    <value>
+      $274B
+    </value>
+  </const>
+  <const name="WSAETIMEDOUT" type="Integer">
+    <value>
+      $274C
+    </value>
+  </const>
+  <const name="WSAECONNREFUSED" type="Integer">
+    <value>
+      $274D
+    </value>
+  </const>
+  <const name="WSAELOOP" type="Integer">
+    <value>
+      $274E
+    </value>
+  </const>
+  <const name="WSAENAMETOOLONG" type="Integer">
+    <value>
+      $274F
+    </value>
+  </const>
+  <const name="WSAEHOSTDOWN" type="Integer">
+    <value>
+      $2750
+    </value>
+  </const>
+  <const name="WSAEHOSTUNREACH" type="Integer">
+    <value>
+      $2751
+    </value>
+  </const>
+  <const name="WSAENOTEMPTY" type="Integer">
+    <value>
+      $2752
+    </value>
+  </const>
+  <const name="WSAEPROCLIM" type="Integer">
+    <value>
+      $2753
+    </value>
+  </const>
+  <const name="WSAEUSERS" type="Integer">
+    <value>
+      $2754
+    </value>
+  </const>
+  <const name="WSAEDQUOT" type="Integer">
+    <value>
+      $2755
+    </value>
+  </const>
+  <const name="WSAESTALE" type="Integer">
+    <value>
+      $2756
+    </value>
+  </const>
+  <const name="WSAEREMOTE" type="Integer">
+    <value>
+      $2757
+    </value>
+  </const>
+  <const name="WSAEDISCON" type="Integer">
+    <value>
+      $2775
+    </value>
+  </const>
+  <const name="WSASYSNOTREADY" type="Integer">
+    <value>
+      $276B
+    </value>
+  </const>
+  <const name="WSAVERNOTSUPPORTED" type="Integer">
+    <value>
+      $276C
+    </value>
+  </const>
+  <const name="WSANOTINITIALISED" type="Integer">
+    <value>
+      $276D
+    </value>
+  </const>
+  <const name="WSAHOST_NOT_FOUND" type="Integer">
+    <value>
+      $2AF9
+    </value>
+  </const>
+  <const name="HOST_NOT_FOUND" type="Integer">
+    <value>
+      $2AF9
+    </value>
+  </const>
+  <const name="WSATRY_AGAIN" type="Integer">
+    <value>
+      $2AFA
+    </value>
+  </const>
+  <const name="TRY_AGAIN" type="Integer">
+    <value>
+      $2AFA
+    </value>
+  </const>
+  <const name="WSANO_RECOVERY" type="Integer">
+    <value>
+      $2AFB
+    </value>
+  </const>
+  <const name="NO_RECOVERY" type="Integer">
+    <value>
+      $2AFB
+    </value>
+  </const>
+  <const name="WSANO_DATA" type="Integer">
+    <value>
+      $2AFC
+    </value>
+  </const>
+  <const name="NO_DATA" type="Integer">
+    <value>
+      $2AFC
+    </value>
+  </const>
+  <const name="WSANO_ADDRESS" type="Integer">
+    <value>
+      $2AFC
+    </value>
+  </const>
+  <const name="NO_ADDRESS" type="Integer">
+    <value>
+      $2AFC
+    </value>
+  </const>
+  <const name="EWOULDBLOCK" type="Integer">
+    <value>
+      $2733
+    </value>
+  </const>
+  <const name="EINPROGRESS" type="Integer">
+    <value>
+      $2734
+    </value>
+  </const>
+  <const name="EALREADY" type="Integer">
+    <value>
+      $2735
+    </value>
+  </const>
+  <const name="ENOTSOCK" type="Integer">
+    <value>
+      $2736
+    </value>
+  </const>
+  <const name="EDESTADDRREQ" type="Integer">
+    <value>
+      $2737
+    </value>
+  </const>
+  <const name="EMSGSIZE" type="Integer">
+    <value>
+      $2738
+    </value>
+  </const>
+  <const name="EPROTOTYPE" type="Integer">
+    <value>
+      $2739
+    </value>
+  </const>
+  <const name="ENOPROTOOPT" type="Integer">
+    <value>
+      $273A
+    </value>
+  </const>
+  <const name="EPROTONOSUPPORT" type="Integer">
+    <value>
+      $273B
+    </value>
+  </const>
+  <const name="ESOCKTNOSUPPORT" type="Integer">
+    <value>
+      $273C
+    </value>
+  </const>
+  <const name="EOPNOTSUPP" type="Integer">
+    <value>
+      $273D
+    </value>
+  </const>
+  <const name="EPFNOSUPPORT" type="Integer">
+    <value>
+      $273E
+    </value>
+  </const>
+  <const name="EAFNOSUPPORT" type="Integer">
+    <value>
+      $273F
+    </value>
+  </const>
+  <const name="EADDRINUSE" type="Integer">
+    <value>
+      $2740
+    </value>
+  </const>
+  <const name="EADDRNOTAVAIL" type="Integer">
+    <value>
+      $2741
+    </value>
+  </const>
+  <const name="ENETDOWN" type="Integer">
+    <value>
+      $2742
+    </value>
+  </const>
+  <const name="ENETUNREACH" type="Integer">
+    <value>
+      $2743
+    </value>
+  </const>
+  <const name="ENETRESET" type="Integer">
+    <value>
+      $2744
+    </value>
+  </const>
+  <const name="ECONNABORTED" type="Integer">
+    <value>
+      $2745
+    </value>
+  </const>
+  <const name="ECONNRESET" type="Integer">
+    <value>
+      $2746
+    </value>
+  </const>
+  <const name="ENOBUFS" type="Integer">
+    <value>
+      $2747
+    </value>
+  </const>
+  <const name="EISCONN" type="Integer">
+    <value>
+      $2748
+    </value>
+  </const>
+  <const name="ENOTCONN" type="Integer">
+    <value>
+      $2749
+    </value>
+  </const>
+  <const name="ESHUTDOWN" type="Integer">
+    <value>
+      $274A
+    </value>
+  </const>
+  <const name="ETOOMANYREFS" type="Integer">
+    <value>
+      $274B
+    </value>
+  </const>
+  <const name="ETIMEDOUT" type="Integer">
+    <value>
+      $274C
+    </value>
+  </const>
+  <const name="ECONNREFUSED" type="Integer">
+    <value>
+      $274D
+    </value>
+  </const>
+  <const name="ELOOP" type="Integer">
+    <value>
+      $274E
+    </value>
+  </const>
+  <const name="ENAMETOOLONG" type="Integer">
+    <value>
+      $274F
+    </value>
+  </const>
+  <const name="EHOSTDOWN" type="Integer">
+    <value>
+      $2750
+    </value>
+  </const>
+  <const name="EHOSTUNREACH" type="Integer">
+    <value>
+      $2751
+    </value>
+  </const>
+  <const name="ENOTEMPTY" type="Integer">
+    <value>
+      $2752
+    </value>
+  </const>
+  <const name="EPROCLIM" type="Integer">
+    <value>
+      $2753
+    </value>
+  </const>
+  <const name="EUSERS" type="Integer">
+    <value>
+      $2754
+    </value>
+  </const>
+  <const name="EDQUOT" type="Integer">
+    <value>
+      $2755
+    </value>
+  </const>
+  <const name="ESTALE" type="Integer">
+    <value>
+      $2756
+    </value>
+  </const>
+  <const name="EREMOTE" type="Integer">
+    <value>
+      $2757
+    </value>
+  </const>
+  <function name="WSAMakeSyncReply" visibility="public">
+    <parameters>
+      <parameter name="buflen" type="Word" />
+      <parameter name="Error" type="Word" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="WSAMakeSelectReply" visibility="public">
+    <parameters>
+      <parameter name="Event" type="Word" />
+      <parameter name="Error" type="Word" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="WSAGetAsyncBuflen" visibility="public">
+    <parameters>
+      <parameter name="Param" type="Integer" />
+      <retval type="Word" />
+    </parameters>
+  </function>
+  <function name="WSAGetAsyncError" visibility="public">
+    <parameters>
+      <parameter name="Param" type="Integer" />
+      <retval type="Word" />
+    </parameters>
+  </function>
+  <function name="WSAGetSelectEvent" visibility="public">
+    <parameters>
+      <parameter name="Param" type="Integer" />
+      <retval type="Word" />
+    </parameters>
+  </function>
+  <function name="WSAGetSelectError" visibility="public">
+    <parameters>
+      <parameter name="Param" type="Integer" />
+      <retval type="Word" />
+    </parameters>
+  </function>
+  <procedure name="FD_CLR" visibility="public">
+    <parameters>
+      <parameter name="socket" type="Integer" />
+      <parameter name="FDSet" type="TFDSet" paramflags="var" />
+    </parameters>
+  </procedure>
+  <function name="FD_ISSET" visibility="public">
+    <parameters>
+      <parameter name="socket" type="Integer" />
+      <parameter name="FDSet" type="TFDSet" paramflags="var" />
+      <retval type="Boolean" />
+    </parameters>
+  </function>
+  <procedure name="FD_SET" visibility="public">
+    <parameters>
+      <parameter name="socket" type="Integer" />
+      <parameter name="FDSet" type="TFDSet" paramflags="var" />
+    </parameters>
+  </procedure>
+  <procedure name="FD_ZERO" visibility="public">
+    <parameters>
+      <parameter name="FDSet" type="TFDSet" paramflags="var" />
+    </parameters>
+  </procedure>
+  <function name="accept" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="addr" type="PSOCKADDR" />
+      <parameter name="addrlen" type="PInteger" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="bind" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="addr" type="sockaddr_in" paramflags="var" />
+      <parameter name="namelen" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="closesocket" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="connect" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="Name" type="sockaddr_in" paramflags="var" />
+      <parameter name="namelen" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="getpeername" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="Name" type="sockaddr_in" paramflags="var" />
+      <parameter name="namelen" type="Integer" paramflags="var" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="getsockname" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="Name" type="sockaddr_in" paramflags="var" />
+      <parameter name="namelen" type="Integer" paramflags="var" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="getsockopt" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="level" type="Integer" />
+      <parameter name="optname" type="Integer" />
+      <parameter name="optval" type="PAnsiChar" />
+      <parameter name="optlen" type="Integer" paramflags="var" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="htonl" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="hostlong" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="htons" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="hostshort" type="Word" />
+      <retval type="Word" />
+    </parameters>
+  </function>
+  <function name="inet_addr" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="cp" type="PAnsiChar" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="inet_ntoa" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="inaddr" type="in_addr" />
+      <retval type="PAnsiChar" />
+    </parameters>
+  </function>
+  <function name="ioctlsocket" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="cmd" type="Cardinal" />
+      <parameter name="arg" type="Integer" paramflags="var" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="listen" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="backlog" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="ntohl" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="netlong" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="ntohs" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="netshort" type="Word" />
+      <retval type="Word" />
+    </parameters>
+  </function>
+  <function name="recv" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="Buf" paramflags="var" />
+      <parameter name="len" type="Integer" />
+      <parameter name="flags" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="recvfrom" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="Buf" paramflags="var" />
+      <parameter name="len" type="Integer" />
+      <parameter name="flags" type="Integer" />
+      <parameter name="from" type="sockaddr_in" paramflags="var" />
+      <parameter name="fromlen" type="Integer" paramflags="var" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="select" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="nfds" type="Integer" />
+      <parameter name="readfds" type="PFDSet" />
+      <parameter name="writefds" type="PFDSet" />
+      <parameter name="exceptfds" type="PFDSet" />
+      <parameter name="timeout" type="PTimeVal" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="send" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="Buf" paramflags="var" />
+      <parameter name="len" type="Integer" />
+      <parameter name="flags" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="sendto" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="Buf" paramflags="var" />
+      <parameter name="len" type="Integer" />
+      <parameter name="flags" type="Integer" />
+      <parameter name="addrto" type="sockaddr_in" paramflags="var" />
+      <parameter name="tolen" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="setsockopt" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="level" type="Integer" />
+      <parameter name="optname" type="Integer" />
+      <parameter name="optval" type="PAnsiChar" />
+      <parameter name="optlen" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="shutdown" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="how" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="socket" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="af" type="Integer" />
+      <parameter name="Struct" type="Integer" />
+      <parameter name="protocol" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="gethostbyaddr" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="addr" type="Pointer" />
+      <parameter name="len" type="Integer" />
+      <parameter name="Struct" type="Integer" />
+      <retval type="PHostEnt" />
+    </parameters>
+  </function>
+  <function name="gethostbyname" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="Name" type="PAnsiChar" />
+      <retval type="PHostEnt" />
+    </parameters>
+  </function>
+  <function name="getprotobyname" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="Name" type="PAnsiChar" />
+      <retval type="PProtoEnt" />
+    </parameters>
+  </function>
+  <function name="getprotobynumber" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="proto" type="Integer" />
+      <retval type="PProtoEnt" />
+    </parameters>
+  </function>
+  <function name="getservbyname" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="Name" type="PAnsiChar" />
+      <parameter name="proto" type="PAnsiChar" />
+      <retval type="PServEnt" />
+    </parameters>
+  </function>
+  <function name="getservbyport" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="port" type="Integer" />
+      <parameter name="proto" type="PAnsiChar" />
+      <retval type="PServEnt" />
+    </parameters>
+  </function>
+  <function name="gethostname" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="Name" type="PAnsiChar" />
+      <parameter name="len" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="WSAAsyncSelect" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="HWindow" type="HWND" />
+      <parameter name="wMsg" type="Integer" />
+      <parameter name="lEvent" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="WSARecvEx" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="Buf" paramflags="var" />
+      <parameter name="len" type="Integer" />
+      <parameter name="flags" type="Integer" paramflags="var" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="WSAAsyncGetHostByAddr" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="HWindow" type="HWND" />
+      <parameter name="wMsg" type="Integer" />
+      <parameter name="addr" type="PAnsiChar" />
+      <parameter name="len" type="Integer" />
+      <parameter name="Struct" type="Integer" />
+      <parameter name="Buf" type="PAnsiChar" />
+      <parameter name="buflen" type="Integer" />
+      <retval type="Cardinal" />
+    </parameters>
+  </function>
+  <function name="WSAAsyncGetHostByName" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="HWindow" type="HWND" />
+      <parameter name="wMsg" type="Integer" />
+      <parameter name="Name" type="PAnsiChar" />
+      <parameter name="Buf" type="PAnsiChar" />
+      <parameter name="buflen" type="Integer" />
+      <retval type="Cardinal" />
+    </parameters>
+  </function>
+  <function name="WSAAsyncGetProtoByNumber" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="HWindow" type="HWND" />
+      <parameter name="wMsg" type="Integer" />
+      <parameter name="number" type="Integer" />
+      <parameter name="Buf" type="PAnsiChar" />
+      <parameter name="buflen" type="Integer" />
+      <retval type="Cardinal" />
+    </parameters>
+  </function>
+  <function name="WSAAsyncGetProtoByName" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="HWindow" type="HWND" />
+      <parameter name="wMsg" type="Integer" />
+      <parameter name="Name" type="PAnsiChar" />
+      <parameter name="Buf" type="PAnsiChar" />
+      <parameter name="buflen" type="Integer" />
+      <retval type="Cardinal" />
+    </parameters>
+  </function>
+  <function name="WSAAsyncGetServByPort" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="HWindow" type="HWND" />
+      <parameter name="wMsg" type="Integer" />
+      <parameter name="port" type="Integer" />
+      <parameter name="proto" type="PAnsiChar" />
+      <parameter name="Buf" type="PAnsiChar" />
+      <parameter name="buflen" type="Integer" />
+      <retval type="Cardinal" />
+    </parameters>
+  </function>
+  <function name="WSAAsyncGetServByName" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="HWindow" type="HWND" />
+      <parameter name="wMsg" type="Integer" />
+      <parameter name="Name" type="PAnsiChar" />
+      <parameter name="proto" type="PAnsiChar" />
+      <parameter name="Buf" type="PAnsiChar" />
+      <parameter name="buflen" type="Integer" />
+      <retval type="Cardinal" />
+    </parameters>
+  </function>
+  <function name="WSACancelAsyncRequest" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="hAsyncTaskHandle" type="Cardinal" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="WSASetBlockingHook" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="lpBlockFunc" type="Pointer" />
+      <retval type="Pointer" />
+    </parameters>
+  </function>
+  <function name="WSAUnhookBlockingHook" visibility="public" callconv="stdcall">
+    <parameters>
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="WSAGetLastError" visibility="public" callconv="stdcall">
+    <parameters>
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <procedure name="WSASetLastError" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="iError" type="Integer" />
+    </parameters>
+  </procedure>
+  <function name="WSACancelBlockingCall" visibility="public" callconv="stdcall">
+    <parameters>
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="WSAIsBlocking" visibility="public" callconv="stdcall">
+    <parameters>
+      <retval type="LongBool" />
+    </parameters>
+  </function>
+  <function name="WSAStartup" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="wVersionRequired" type="Word" />
+      <parameter name="WSData" type="WSAData" paramflags="var" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="WSACleanup" visibility="public" callconv="stdcall">
+    <parameters>
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="__WSAFDIsSet" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="s" type="Integer" />
+      <parameter name="FDSet" type="TFDSet" paramflags="var" />
+      <retval type="LongBool" />
+    </parameters>
+  </function>
+  <function name="TransmitFile" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="hSocket" type="Integer" />
+      <parameter name="hFile" type="Cardinal" />
+      <parameter name="nNumberOfBytesToWrite" type="Cardinal" />
+      <parameter name="nNumberOfBytesPerSend" type="Cardinal" />
+      <parameter name="lpOverlapped" type="POverlapped" />
+      <parameter name="lpTransmitBuffers" type="PTransmitFileBuffers" />
+      <parameter name="dwReserved" type="Cardinal" />
+      <retval type="LongBool" />
+    </parameters>
+  </function>
+  <function name="AcceptEx" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="sListenSocket" type="Integer" />
+      <parameter name="sAcceptSocket" type="Integer" />
+      <parameter name="lpOutputBuffer" type="Pointer" />
+      <parameter name="dwReceiveDataLength" type="Cardinal" />
+      <parameter name="dwLocalAddressLength" type="Cardinal" />
+      <parameter name="dwRemoteAddressLength" type="Cardinal" />
+      <parameter name="lpdwBytesReceived" type="Cardinal" paramflags="var" />
+      <parameter name="lpOverlapped" type="POverlapped" />
+      <retval type="LongBool" />
+    </parameters>
+  </function>
+  <procedure name="GetAcceptExSockaddrs" visibility="public" callconv="stdcall">
+    <parameters>
+      <parameter name="lpOutputBuffer" type="Pointer" />
+      <parameter name="dwReceiveDataLength" type="Cardinal" />
+      <parameter name="dwLocalAddressLength" type="Cardinal" />
+      <parameter name="dwRemoteAddressLength" type="Cardinal" />
+      <parameter name="LocalSockaddr" type="sockaddr_in" paramflags="var" />
+      <parameter name="LocalSockaddrLength" type="Integer" paramflags="var" />
+      <parameter name="RemoteSockaddr" type="sockaddr_in" paramflags="var" />
+      <parameter name="RemoteSockaddrLength" type="Integer" paramflags="var" />
+    </parameters>
+  </procedure>
+</namespace>

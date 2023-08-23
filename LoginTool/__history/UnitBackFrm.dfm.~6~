@@ -1,0 +1,27 @@
+object BackForm: TBackForm
+  Left = 0
+  Top = 0
+  Caption = 'BackForm'
+  ClientHeight = 635
+  ClientWidth = 1040
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 120
+  TextHeight = 16
+  object Panel1: TPanel
+    Left = 80
+    Top = 96
+    Width = 321
+    Height = 401
+    Caption = 'Panel1'
+    Color = clBackground
+    ParentBackground = False
+    TabOrder = 0
+  end
+end

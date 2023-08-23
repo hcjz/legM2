@@ -1,0 +1,24 @@
+[info]
+name=AlphaControls
+ver=v6.21
+author=AC Team
+mail=support@alphaskins.com
+web=http://www.alphaskins.com
+devtool=Delphi7,11,12 / BCB 6,11,12
+sn=
+fullsource=1
+desc=AlphaControls 是一套含一些扩展属性的标准组件，每个组件都有自己的绘画边框、透明度、阴影等属性，实时绘图，连提示(Hint)也有透明度和多种显示样式。
+
+本版本支持以下 IDE：
+Delphi 7
+C++Builder 6
+BDS 2006 (Delphi 2006, C++Builder 2006)
+RAD Studio 2007 (Delphi 2007, C++Builder 2007)
+RAD Studio 2009 (Delphi 2009, C++Builder 2009)
+
+╔---------------------------╗
+┆ 欢迎访问 C++Builder 研究  ┆
+┆   http://www.ccrun.com    ┆
+╚---------------------------╝
+
+// 63 63 72 75 6E 2E 63 6F 6D

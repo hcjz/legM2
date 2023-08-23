@@ -1,0 +1,139 @@
+object FrmSetBtnImage: TFrmSetBtnImage
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = #25353#38062#22270#29255#35774#32622
+  ClientHeight = 429
+  ClientWidth = 645
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  PixelsPerInch = 120
+  TextHeight = 16
+  object GroupBox1: TGroupBox
+    Left = 22
+    Top = 8
+    Width = 289
+    Height = 169
+    Caption = #25353#38062#22270#29255
+    TabOrder = 0
+    object Image1: TImage
+      Left = 86
+      Top = 76
+      Width = 104
+      Height = 26
+      Stretch = True
+      OnDblClick = RzButton3Click
+    end
+    object RzButton3: TRzButton
+      Left = 248
+      Top = 133
+      Width = 31
+      Caption = '...'
+      TabOrder = 0
+      OnClick = RzButton3Click
+    end
+  end
+  object GroupBox2: TGroupBox
+    Left = 334
+    Top = 8
+    Width = 289
+    Height = 169
+    Caption = #40736#26631#31227#21160
+    TabOrder = 1
+    object Image2: TImage
+      Left = 86
+      Top = 76
+      Width = 104
+      Height = 26
+      Stretch = True
+      OnDblClick = RzButton4Click
+    end
+    object RzButton4: TRzButton
+      Left = 248
+      Top = 133
+      Width = 31
+      Caption = '...'
+      TabOrder = 0
+      OnClick = RzButton4Click
+    end
+  end
+  object GroupBox3: TGroupBox
+    Left = 334
+    Top = 187
+    Width = 289
+    Height = 169
+    Caption = #31105#27490#20351#29992
+    TabOrder = 2
+    object Image4: TImage
+      Left = 86
+      Top = 76
+      Width = 104
+      Height = 26
+      Stretch = True
+      OnDblClick = RzButton6Click
+    end
+    object RzButton6: TRzButton
+      Left = 248
+      Top = 133
+      Width = 31
+      Caption = '...'
+      TabOrder = 0
+      OnClick = RzButton6Click
+    end
+  end
+  object GroupBox4: TGroupBox
+    Left = 22
+    Top = 187
+    Width = 289
+    Height = 169
+    Caption = #40736#26631#25353#19979
+    TabOrder = 3
+    object Image3: TImage
+      Left = 86
+      Top = 76
+      Width = 104
+      Height = 26
+      Stretch = True
+      OnDblClick = RzButton5Click
+    end
+    object RzButton5: TRzButton
+      Left = 248
+      Top = 133
+      Width = 31
+      Caption = '...'
+      TabOrder = 0
+      OnClick = RzButton5Click
+    end
+  end
+  object RzButton1: TRzButton
+    Left = 144
+    Top = 376
+    Width = 105
+    Height = 33
+    ModalResult = 1
+    Caption = #30830'    '#23450
+    TabOrder = 4
+  end
+  object RzButton2: TRzButton
+    Left = 408
+    Top = 376
+    Width = 105
+    Height = 33
+    ModalResult = 2
+    Caption = #21462'    '#28040
+    TabOrder = 5
+  end
+  object OpenPictureDialog1: TOpenPictureDialog
+    Filter = 
+      'All (*.jpg;*.jpeg;*.bmp)|*.jpg;*.jpeg;*.bmp|JPEG Image File (*.j' +
+      'pg)|*.jpg|JPEG Image File (*.jpeg)|*.jpeg|Bitmaps (*.bmp)|*.bmp'
+    Left = 224
+    Top = 56
+  end
+end

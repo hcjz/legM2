@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{6f991270-aec3-4a66-9205-bae511afe170}</ProjectGuid>
+    <MainSource>Mir2.dpr</MainSource>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release_4_ge</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
+    <DCC_DependencyCheckOutputName>..\LoginTool\ClientBin\Mir2.exe</DCC_DependencyCheckOutputName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_DebugInformation>False</DCC_DebugInformation>
+    <DCC_WriteableConstants>True</DCC_WriteableConstants>
+    <DCC_LocalDebugSymbols>False</DCC_LocalDebugSymbols>
+    <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+    <DCC_MapFile>3</DCC_MapFile>
+    <DCC_ExeOutput>D:\Program Files (x86)\盛大网络\热血传奇</DCC_ExeOutput>
+    <DCC_DcuOutput>.\Temp</DCC_DcuOutput>
+    <DCC_ObjOutput>.\Temp</DCC_ObjOutput>
+    <DCC_HppOutput>.\Temp</DCC_HppOutput>
+    <DCC_UnitSearchPath>..\Common;..\..\Components\ScktComp;..\..\Components\cnvcl\Source\Common;..\..\Components\DCPcrypt;..\..\Components\DCPcrypt\Ciphers;..\..\Components\DCPcrypt\Hashes;..\..\Components\VclZip.pro.v3.10.1;..\..\Source\MirClient_MyHGE\HGE_Full\DirectX</DCC_UnitSearchPath>
+    <DCC_ResourcePath>..\Common;..\..\Components\ScktComp;..\..\Components\cnvcl\Source\Common;..\..\Components\DCPcrypt;..\..\Components\DCPcrypt\Ciphers;..\..\Components\DCPcrypt\Hashes;..\..\Components\VclZip.pro.v3.10.1;..\..\Source\MirClient_MyHGE\HGE_Full\DirectX</DCC_ResourcePath>
+    <DCC_ObjPath>..\Common;..\..\Components\ScktComp;..\..\Components\cnvcl\Source\Common;..\..\Components\DCPcrypt;..\..\Components\DCPcrypt\Ciphers;..\..\Components\DCPcrypt\Hashes;..\..\Components\VclZip.pro.v3.10.1;..\..\Source\MirClient_MyHGE\HGE_Full\DirectX</DCC_ObjPath>
+    <DCC_IncludePath>..\Common;..\..\Components\ScktComp;..\..\Components\cnvcl\Source\Common;..\..\Components\DCPcrypt;..\..\Components\DCPcrypt\Ciphers;..\..\Components\DCPcrypt\Hashes;..\..\Components\VclZip.pro.v3.10.1;..\..\Source\MirClient_MyHGE\HGE_Full\DirectX</DCC_IncludePath>
+    <DCC_Define>SIGN3D;ISWOL;DYNAMIC_ENCRYPT;OPENCENTERMAG;RELEASE;MIR2EX;DEBUG_LOGIN__;SERIESSKILL;UI_0508;RELEASE</DCC_Define>
+    <DCC_UNSAFE_TYPE>True</DCC_UNSAFE_TYPE>
+    <DCC_UNSAFE_CODE>True</DCC_UNSAFE_CODE>
+    <DCC_UNSAFE_CAST>True</DCC_UNSAFE_CAST>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_4_ge|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_WriteableConstants>True</DCC_WriteableConstants>
+    <DCC_ExeOutput>..\LoginTool\ClientBin</DCC_ExeOutput>
+    <DCC_DcuOutput>.\Temp</DCC_DcuOutput>
+    <DCC_ObjOutput>.\Temp</DCC_ObjOutput>
+    <DCC_HppOutput>.\Temp</DCC_HppOutput>
+    <DCC_UnitSearchPath>..\Common;..\Components\ScktComp;..\Components\DCPcrypt;..\Components\DCPcrypt\Ciphers;..\Components\DCPcrypt\Hashes;..\Components\VclZip.pro.v3.10.1;..\Components\cnvcl\Source\Common;HGE_Full\DirectX;HGE_Full\include</DCC_UnitSearchPath>
+    <DCC_ResourcePath>..\Common;..\Components\ScktComp;..\Components\DCPcrypt;..\Components\DCPcrypt\Ciphers;..\Components\DCPcrypt\Hashes;..\Components\VclZip.pro.v3.10.1;..\Components\cnvcl\Source\Common;HGE_Full\DirectX;HGE_Full\include</DCC_ResourcePath>
+    <DCC_ObjPath>..\Common;..\Components\ScktComp;..\Components\DCPcrypt;..\Components\DCPcrypt\Ciphers;..\Components\DCPcrypt\Hashes;..\Components\VclZip.pro.v3.10.1;..\Components\cnvcl\Source\Common;HGE_Full\DirectX;HGE_Full\include</DCC_ObjPath>
+    <DCC_IncludePath>..\Common;..\Components\ScktComp;..\Components\DCPcrypt;..\Components\DCPcrypt\Ciphers;..\Components\DCPcrypt\Hashes;..\Components\VclZip.pro.v3.10.1;..\Components\cnvcl\Source\Common;HGE_Full\DirectX;HGE_Full\include</DCC_IncludePath>
+    <DCC_Define>SIGN3D;ISWOL;DYNAMIC_ENCRYPT;OPENCENTERMAG;RELEASE;MIR2EX;DEBUG_LOGIN__;SERIESSKILL;UI_0508;DEBUG</DCC_Define>
+    <DCC_UNSAFE_TYPE>True</DCC_UNSAFE_TYPE>
+    <DCC_UNSAFE_CODE>True</DCC_UNSAFE_CODE>
+    <DCC_UNSAFE_CAST>True</DCC_UNSAFE_CAST>
+    <DCC_Hints>False</DCC_Hints>
+    <DCC_Warnings>False</DCC_Warnings>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_6_ge|AnyCPU' ">
+    <Version>7.0</Version>
+    <DCC_WriteableConstants>True</DCC_WriteableConstants>
+    <DCC_Hints>False</DCC_Hints>
+    <DCC_Warnings>False</DCC_Warnings>
+    <DCC_ExeOutput>..\LoginTool\ClientBin</DCC_ExeOutput>
+    <DCC_DcuOutput>.\Dcu</DCC_DcuOutput>
+    <DCC_ObjOutput>.\Dcu</DCC_ObjOutput>
+    <DCC_HppOutput>.\Dcu</DCC_HppOutput>
+    <DCC_UnitSearchPath>..\Common;..\Components\DCPcrypt;..\Components\DCPcrypt\Ciphers;..\Components\DCPcrypt\Hashes;..\Components\VclZip.pro.v3.10.1;..\Components\cnvcl\Source\Common;HGE_Full\DirectX;HGE_Full\include</DCC_UnitSearchPath>
+    <DCC_ResourcePath>..\Common;..\Components\DCPcrypt;..\Components\DCPcrypt\Ciphers;..\Components\DCPcrypt\Hashes;..\Components\VclZip.pro.v3.10.1;..\Components\cnvcl\Source\Common;HGE_Full\DirectX;HGE_Full\include</DCC_ResourcePath>
+    <DCC_ObjPath>..\Common;..\Components\DCPcrypt;..\Components\DCPcrypt\Ciphers;..\Components\DCPcrypt\Hashes;..\Components\VclZip.pro.v3.10.1;..\Components\cnvcl\Source\Common;HGE_Full\DirectX;HGE_Full\include</DCC_ObjPath>
+    <DCC_IncludePath>..\Common;..\Components\DCPcrypt;..\Components\DCPcrypt\Ciphers;..\Components\DCPcrypt\Hashes;..\Components\VclZip.pro.v3.10.1;..\Components\cnvcl\Source\Common;HGE_Full\DirectX;HGE_Full\include</DCC_IncludePath>
+    <DCC_Define>SIGN3D;ISWOL;DYNAMIC_ENCRYPT;OPENCENTERMAG;RELEASE;MIR2EX;UI_0508__;DEBUG_LOGIN__;JX_ENCODE</DCC_Define>
+    <DCC_UNSAFE_TYPE>True</DCC_UNSAFE_TYPE>
+    <DCC_UNSAFE_CODE>True</DCC_UNSAFE_CODE>
+    <DCC_UNSAFE_CAST>True</DCC_UNSAFE_CAST>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <Version>7.0</Version>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <Borland.Personality>Delphi.Personality</Borland.Personality>
+    <Borland.ProjectType />
+    <BorlandProject>
+<BorlandProject><Delphi.Personality><Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">False</VersionInfo><VersionInfo Name="MajorVer">1</VersionInfo><VersionInfo Name="MinorVer">9</VersionInfo><VersionInfo Name="Release">5</VersionInfo><VersionInfo Name="Build">0</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">2052</VersionInfo><VersionInfo Name="CodePage">936</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">D3D软件</VersionInfoKeys><VersionInfoKeys Name="FileDescription">D3D网游客户端</VersionInfoKeys><VersionInfoKeys Name="FileVersion">1.9.5.0</VersionInfoKeys><VersionInfoKeys Name="InternalName">GameClitnt.exe</VersionInfoKeys><VersionInfoKeys Name="LegalCopyright">版权所有(C)  D3D软件. 2018</VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks">D3D网游客户端</VersionInfoKeys><VersionInfoKeys Name="OriginalFilename">GameClitnt.exe</VersionInfoKeys><VersionInfoKeys Name="ProductName">D3D网游客户端</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.9.5.0.0618</VersionInfoKeys><VersionInfoKeys Name="SpecialBuild"></VersionInfoKeys></VersionInfoKeys><Source><Source Name="MainSource">Mir2.dpr</Source></Source></Delphi.Personality></BorlandProject></BorlandProject>
+  </ProjectExtensions>
+  <Import Project="$(MSBuildBinPath)\Borland.Delphi.Targets" />
+  <ItemGroup>
+    <DelphiCompile Include="Mir2.dpr">
+      <MainSource>MainSource</MainSource>
+    </DelphiCompile>
+    <DCCReference Include="..\Common\EDcode.pas" />
+    <DCCReference Include="..\Common\GList.pas" />
+    <DCCReference Include="..\Common\Grobal2.pas" />
+    <DCCReference Include="..\Common\HashList.pas" />
+    <DCCReference Include="..\Common\HUtil32.pas" />
+    <DCCReference Include="..\Common\StallSystem.pas" />
+    <DCCReference Include="Actor.pas" />
+    <DCCReference Include="AxeMon.pas" />
+    <DCCReference Include="clEvent.pas" />
+    <DCCReference Include="ClFunc.pas" />
+    <DCCReference Include="cliUtil.pas" />
+    <DCCReference Include="ClMain.pas">
+      <Form>frmMain</Form>
+    </DCCReference>
+    <DCCReference Include="DlgConfig.pas">
+      <Form>frmDlgConfig</Form>
+    </DCCReference>
+    <DCCReference Include="DrawScrn.pas" />
+    <DCCReference Include="DxHint.pas" />
+    <DCCReference Include="frmWebBroser.pas">
+      <Form>frmWebBrowser</Form>
+    </DCCReference>
+    <DCCReference Include="FState.pas">
+      <Form>FrmDlg</Form>
+    </DCCReference>
+    <DCCReference Include="HerbActor.pas" />
+    <DCCReference Include="HeroActor.pas" />
+    <DCCReference Include="HGE_Full\DirectX\D3DX81mo.pas" />
+    <DCCReference Include="HGE_Full\DirectX\DirectX.pas" />
+    <DCCReference Include="HGE_Full\DirectX\DLLLoader.pas" />
+    <DCCReference Include="HGE_Full\DirectX\DXCommon.pas" />
+    <DCCReference Include="HGE_Full\DirectX\JEDIFile.pas" />
+    <DCCReference Include="HGE_Full\DWinCtl.pas" />
+    <DCCReference Include="HGE_Full\GfxFont.pas" />
+    <DCCReference Include="HGE_Full\HGE.pas" />
+    <DCCReference Include="HGE_Full\HGEBase.pas" />
+    <DCCReference Include="HGE_Full\HGECanvas.pas" />
+    <DCCReference Include="HGE_Full\HGEFont.pas" />
+    <DCCReference Include="HGE_Full\HGEFonts.pas" />
+    <DCCReference Include="HGE_Full\HGERect.pas" />
+    <DCCReference Include="HGE_Full\HGESprite.pas" />
+    <DCCReference Include="HGE_Full\HGETextures.pas" />
+    <DCCReference Include="HGE_Full\HGEUtils.pas" />
+    <DCCReference Include="HGE_Full\NewFont.pas" />
+    <DCCReference Include="HGE_Full\Sound\DirectXSound.pas" />
+    <DCCReference Include="HGE_Full\Sound\DirectXTypes.pas" />
+    <DCCReference Include="HGE_Full\Sound\DirectXWave.pas" />
+    <DCCReference Include="HGE_Full\Vectors2px.pas" />
+    <DCCReference Include="HGE_Full\Wilpion.pas" />
+    <DCCReference Include="HGE_Full\WIL\WIL.pas" />
+    <DCCReference Include="HGE_Full\WIL\wmM2Def.pas" />
+    <DCCReference Include="HGE_Full\WIL\wmM2Wis.pas" />
+    <DCCReference Include="HGE_Full\WIL\wmM2Zip.pas" />
+    <DCCReference Include="HGE_Full\WIL\wmMyImage.pas" />
+    <DCCReference Include="HumanActor.pas" />
+    <DCCReference Include="IntroScn.pas" />
+    <DCCReference Include="magiceff.pas" />
+    <DCCReference Include="MaketSystem.pas" />
+    <DCCReference Include="MapUnit.pas" />
+    <DCCReference Include="MirEffect.pas" />
+    <DCCReference Include="MShare.pas" />
+    <DCCReference Include="PlayScn.pas" />
+    <DCCReference Include="SoundUtil.pas" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2018/10/18 22:18:49.243.bdsproj,D:\LegendM2\Source\MirClient_saki\mir2.bdsproj=D:\LegendM2\Source\MirClient_saki\Mir2_Saki.bdsproj</Transaction>
+    <Transaction>2018/11/13 10:41:02.821.bdsproj,D:\LegendM2\Source\MirClient_MyHGE\Mir2_Saki.bdsproj=D:\LegendM2\Source\MirClient_MyHGE\Mir2_MyHGE.bdsproj</Transaction>
+    <Transaction>2018/11/13 11:00:40.283.bdsproj,D:\LegendM2\Source\MirClient_MyHGE\Mir2_MyHGE.bdsproj=D:\LegendM2\Source\MirClient_MyHGE\Mir2_Test.bdsproj</Transaction>
+  </Transactions>
+</BorlandProject>

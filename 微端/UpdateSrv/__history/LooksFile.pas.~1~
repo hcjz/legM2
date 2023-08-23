@@ -1,0 +1,37 @@
+unit LooksFile;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls;
+
+type
+  TfrmLooksFile = class(TForm)
+    tabData: TPageControl;
+    Wzl: TTabSheet;
+    Map: TTabSheet;
+    Wav: TTabSheet;
+    meWzlRunLog: TMemo;
+    MeMapRunLog: TMemo;
+    meWavRunLog: TMemo;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    procedure Open;
+  end;
+
+var
+  frmLooksFile: TfrmLooksFile;
+
+implementation
+
+{$R *.dfm}
+
+procedure TfrmLooksFile.Open;
+begin
+  ShowModal;
+end;
+
+end.

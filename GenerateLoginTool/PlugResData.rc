@@ -1,0 +1,2 @@
+ResData LoginGate ".\LoginToolBin\LoginGate.exe"
+ResData LoginTool ".\LoginToolBin\LoginTool.exe"

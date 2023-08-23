@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<namespace name="EDcode">
+  <function name="EncodeBuf" visibility="public">
+    <parameters>
+      <parameter name="buf" type="Integer" />
+      <parameter name="len" type="Integer" />
+      <parameter name="DstBuf" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="DeCodeBuf" visibility="public">
+    <parameters>
+      <parameter name="buf" type="Integer" />
+      <parameter name="len" type="Integer" />
+      <parameter name="DstBuf" type="Integer" />
+      <retval type="Integer" />
+    </parameters>
+  </function>
+  <function name="MakeDefaultMsg" visibility="public">
+    <parameters>
+      <parameter name="wIdent" type="Word" />
+      <parameter name="nRecog" type="Integer" />
+      <parameter name="wParam" type="Word" />
+      <parameter name="wTag" type="Word" />
+      <parameter name="wSeries" type="Word" />
+      <retval type="TCmdPack" />
+    </parameters>
+  </function>
+  <procedure name="Encode6BitBuf" visibility="public">
+    <parameters>
+      <parameter name="pSrc" type="PAnsiChar" />
+      <parameter name="PDest" type="PAnsiChar" />
+      <parameter name="nSrcLen" type="Integer" />
+      <parameter name="nDestLen" type="Integer" />
+    </parameters>
+  </procedure>
+  <procedure name="Decode6BitBuf" visibility="public">
+    <parameters>
+      <parameter name="sSource" type="PAnsiChar" />
+      <parameter name="pBuf" type="PAnsiChar" />
+      <parameter name="nSrcLen" type="Integer" />
+      <parameter name="nBufLen" type="Integer" />
+    </parameters>
+  </procedure>
+  <function name="DecodeMessage" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="TCmdPack" />
+    </parameters>
+  </function>
+  <function name="DecodeString" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <procedure name="DecodeBuffer" visibility="public">
+    <parameters>
+      <parameter name="src" type="string" />
+      <parameter name="buf" type="PAnsiChar" />
+      <parameter name="bufsize" type="Integer" />
+    </parameters>
+  </procedure>
+  <procedure name="DecodeBuffer2" visibility="public">
+    <parameters>
+      <parameter name="src" type="string" />
+      <parameter name="buf" type="PAnsiChar" />
+      <parameter name="bufsize" type="Integer" />
+    </parameters>
+  </procedure>
+  <function name="EncodeMessage" visibility="public">
+    <parameters>
+      <parameter name="sMsg" type="TCmdPack" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="EncodeString" visibility="public">
+    <parameters>
+      <parameter name="Str" type="string" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="EncodeBuffer" visibility="public">
+    <parameters>
+      <parameter name="buf" type="PAnsiChar" />
+      <parameter name="bufsize" type="Integer" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <function name="EncodeBuffer2" visibility="public">
+    <parameters>
+      <parameter name="buf" type="PAnsiChar" />
+      <parameter name="bufsize" type="Integer" />
+      <retval type="string" />
+    </parameters>
+  </function>
+  <procedure name="Encode8BitBuf" visibility="public">
+    <parameters>
+      <parameter name="pSrc" type="PAnsiChar" />
+      <parameter name="PDest" type="PAnsiChar" />
+      <parameter name="nSrcLen" type="Integer" />
+      <parameter name="nDestLen" type="Integer" />
+    </parameters>
+  </procedure>
+  <procedure name="Decode8BitBuf" visibility="public">
+    <parameters>
+      <parameter name="sSource" type="PAnsiChar" />
+      <parameter name="pBuf" type="PAnsiChar" />
+      <parameter name="nSrcLen" type="Integer" />
+      <parameter name="nBufLen" type="Integer" />
+    </parameters>
+  </procedure>
+</namespace>

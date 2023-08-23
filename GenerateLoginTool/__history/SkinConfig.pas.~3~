@@ -1,0 +1,23 @@
+unit SkinConfig;
+
+interface
+
+type
+
+  LabelConf = record
+    Left: Word;
+    Top: Word;
+  end;
+
+  PanelConf = record
+    Left: Word;
+    Top: Word;
+    Width: Word;
+    Height: Word;
+  end;
+
+
+
+implementation
+
+end.

@@ -1,0 +1,55 @@
+package HGEPackage;
+
+{$R *.res}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  vcljpg;
+
+contains
+  HGE in 'HGE.pas',
+  HGEBase in 'HGEBase.pas',
+  HGECanvas in 'HGECanvas.pas',
+  HGEFonts in 'HGEFonts.pas',
+  HGETextures in 'HGETextures.pas',
+  DirectXGraphics in 'DirectX\DirectXGraphics.pas',
+  D3DX81mo in 'DirectX\D3DX81mo.pas',
+  HGESounds in 'HGESounds.pas',
+  DirectXWave in 'Sound\DirectXWave.pas',
+  DirectXSound in 'Sound\DirectXSound.pas',
+  DirectXTypes in 'Sound\DirectXTypes.pas',
+  HGEFont in 'HGEFont.pas',
+  Vectors2px in 'Vectors2px.pas',
+  wmMyImage in 'WIL\wmMyImage.pas',
+  WIL in 'WIL\WIL.pas',
+  wmM2Def in 'WIL\wmM2Def.pas',
+  wmM2Wis in 'WIL\wmM2Wis.pas',
+  wmM2Zip in 'WIL\wmM2Zip.pas',
+  DESEC in '..\DESEC.pas',
+  DWinCtl in 'DWinCtl.pas';
+
+end.
+

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2015/08/16 22:54:58.070.pas,D:\work\LegendOfMir2\LoginTool\Unit1.pas=D:\work\LegendOfMir2\LoginTool\UMirClient.pas</Transaction>
+    <Transaction>2015/08/16 23:47:57.763.pas,D:\work\LegendOfMir2\LoginTool\Unit1.pas=D:\work\LegendOfMir2\LoginTool\UUibRes.pas</Transaction>
+    <Transaction>2015/08/23 06:44:22.953.pas,D:\work\LegendOfMir2\LoginTool\uDep.pas=</Transaction>
+    <Transaction>2015/12/06 13:34:22.841.pas,F:\blueNew\LoginTool\Unit1.pas=F:\blueNew\LoginTool\FrmSetBtnImgUnit.pas</Transaction>
+    <Transaction>2015/12/06 13:34:22.841.dfm,F:\blueNew\LoginTool\Unit1.dfm=F:\blueNew\LoginTool\FrmSetBtnImgUnit.dfm</Transaction>
+    <Transaction>2015/12/06 13:44:18.760.pas,F:\blueNew\LoginTool\FrmSetBtnImgUnit.pas=</Transaction>
+    <Transaction>2015/12/06 13:44:18.760.dfm,F:\blueNew\LoginTool\FrmSetBtnImgUnit.dfm=</Transaction>
+    <Transaction>2015-12-11 13:09:33.009.pas,F:\blueNew\LoginTool\Unit1.pas=F:\blueNew\LoginTool\UnitBackFrm.pas</Transaction>
+    <Transaction>2015-12-11 13:09:33.009.dfm,F:\blueNew\LoginTool\Unit1.dfm=F:\blueNew\LoginTool\UnitBackFrm.dfm</Transaction>
+    <Transaction>2015-12-11 16:12:33.156.pas,F:\blueNew\LoginTool\UnitBackFrm.pas=</Transaction>
+    <Transaction>2015-12-11 16:12:33.156.dfm,F:\blueNew\LoginTool\UnitBackFrm.dfm=</Transaction>
+    <Transaction>2015-12-11 16:16:18.427.pas,F:\blueNew\LoginTool\Unit1.pas=F:\blueNew\LoginTool\UnitBackForm.pas</Transaction>
+    <Transaction>2015-12-11 16:16:18.427.dfm,F:\blueNew\LoginTool\Unit1.dfm=F:\blueNew\LoginTool\UnitBackForm.dfm</Transaction>
+    <Transaction>2019/01/25 11:16:05.504.pas,D:\LEGEND for HGE\LoginTool\SCFastMemory.pas=</Transaction>
+    <Transaction>2019/01/25 11:16:11.231.pas,D:\LEGEND for HGE\LoginTool\UMirClient.pas=</Transaction>
+    <Transaction>2019/01/25 11:16:17.315.pas,D:\LEGEND for HGE\Common\__DESUnit.pas=</Transaction>
+    <Transaction>2019/01/25 11:16:19.971.pas,D:\LEGEND for HGE\Common\VMProtectSDK.pas=</Transaction>
+  </Transactions>
+</BorlandProject>

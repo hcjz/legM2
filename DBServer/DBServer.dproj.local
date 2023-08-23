@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2008-12-01 14:31:17.859.pas,E:\Project\Mir3\Common\Macros\uTeaSet.pas=</Transaction>
+    <Transaction>2008-12-01 14:31:24.906.inc,E:\Project\Mir3\Common\Macros\VMPB.inc=</Transaction>
+    <Transaction>2008-12-01 14:33:33.031.pas,E:\Project\Mir3\M2Server_Hero\MudUtil.pas=</Transaction>
+    <Transaction>2008-12-01 14:33:33.046.pas,E:\Project\Mir3\M2Server_35Day_001\MudUtil.pas=</Transaction>
+    <Transaction>2009-07-30 21:26:08.109.pas,E:\Project\Mir3\Common\AdaptersInfo.pas=</Transaction>
+    <Transaction>2009-07-30 21:32:01.921.pas,E:\Project\Mir3\DBServer\AddrEdit.pas=</Transaction>
+    <Transaction>2009-07-30 21:32:01.921.dfm,E:\Project\Mir3\DBServer\AddrEdit.dfm=</Transaction>
+    <Transaction>2009-07-30 21:32:21.890.pas,E:\Project\Mir3\Common\AdaptersInfo.pas=</Transaction>
+    <Transaction>2010-05-13 01:29:02.968.pas,E:\Project\Mir3\DBServer\Unit1.pas=E:\Project\Mir3\DBServer\gb2big5.pas</Transaction>
+    <Transaction>2010-05-13 01:42:54.812.pas,E:\Project\Mir3\DBServer\gb2big5.pas=</Transaction>
+    <Transaction>2010-07-21 18:14:11.890.pas,E:\Project\Mir3\DBServer\Unit2.pas=E:\Project\Mir3\DBServer\SQLhandler.pas</Transaction>
+    <Transaction>2010-07-21 19:16:48.406.pas,E:\Project\Mir3\DBServer\SQLhandler.pas=</Transaction>
+    <Transaction>2010-07-21 19:43:30.640.pas,E:\Project\Mir3\DBServer\Unit2.pas=E:\Project\Mir3\DBServer\HumDB_SQL.pas</Transaction>
+  </Transactions>
+</BorlandProject>

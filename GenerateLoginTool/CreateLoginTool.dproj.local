@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2009-10-27 03:46:42.906.pas,E:\Project\Mir3\Common\VMProtectSDK.pas=</Transaction>
+    <Transaction>2010-07-03 01:56:20.468.pas,E:\Project\mPlugOfClient\v4.5\Unit2.pas=E:\Project\mPlugOfClient\v4.5\StringGridEx.pas</Transaction>
+    <Transaction>2011-01-07 23:41:44.515.bdsproj,E:\Project\mPlugOfClient\v4.5_Old\CreateLoginTool_45.bdsproj=E:\Project\mPlugOfClient\v4.5_Old\CreateLoginTool_45_Old.bdsproj</Transaction>
+    <Transaction>2015/12/06 14:28:23.227.pas,F:\blueNew\GenerateLoginTool\Unit1.pas=F:\blueNew\GenerateLoginTool\FrmSetBtnImg.pas</Transaction>
+    <Transaction>2015/12/06 14:28:23.227.dfm,F:\blueNew\GenerateLoginTool\Unit1.dfm=F:\blueNew\GenerateLoginTool\FrmSetBtnImg.dfm</Transaction>
+    <Transaction>2015/12/06 14:29:36.998.pas,F:\blueNew\GenerateLoginTool\FrmSetBtnImg.pas=</Transaction>
+    <Transaction>2015/12/06 14:29:36.998.dfm,F:\blueNew\GenerateLoginTool\FrmSetBtnImg.dfm=</Transaction>
+    <Transaction>2015/12/06 14:30:38.884.pas,F:\blueNew\GenerateLoginTool\Unit1.pas=F:\blueNew\GenerateLoginTool\SetBtnImage.pas</Transaction>
+    <Transaction>2015/12/06 14:30:38.884.dfm,F:\blueNew\GenerateLoginTool\Unit1.dfm=F:\blueNew\GenerateLoginTool\SetBtnImage.dfm</Transaction>
+    <Transaction>2015-12-08 20:56:28.132.pas,F:\blueNew\GenerateLoginTool\Unit1.pas=F:\blueNew\GenerateLoginTool\SkinConfig.pas</Transaction>
+    <Transaction>2018-09-01 20:03:19.968.dproj,D:\LEGENDM2\GenerateLoginTool\CreateLoginTool_45_Old.dproj=D:\LEGENDM2\GenerateLoginTool\CreateLoginTool.dproj</Transaction>
+    <Transaction>2019/01/25 11:16:53.651.pas,D:\LEGEND for HGE\Common\VMProtectSDK.pas=</Transaction>
+  </Transactions>
+</BorlandProject>

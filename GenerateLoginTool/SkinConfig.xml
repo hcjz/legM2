@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<namespace name="SkinConfig">
+  <struct name="RadioConf">
+    <field name="Left" type="Word" visibility="public" />
+    <field name="Top" type="Word" visibility="public" />
+    <field name="bWindow" type="Boolean" visibility="public" />
+  </struct>
+  <struct name="LabelConf">
+    <field name="Left" type="Word" visibility="public" />
+    <field name="Top" type="Word" visibility="public" />
+  </struct>
+  <pointer name="pLabelConf" type="LabelConf" indircnt="1" />
+  <struct name="PanelConf">
+    <field name="Left" type="Word" visibility="public" />
+    <field name="Top" type="Word" visibility="public" />
+    <field name="Width" type="Word" visibility="public" />
+    <field name="Height" type="Word" visibility="public" />
+  </struct>
+  <pointer name="pPanelConf" type="PanelConf" indircnt="1" />
+  <struct name="BtnConf">
+    <field name="Left" type="Word" visibility="public" />
+    <field name="Top" type="Word" visibility="public" />
+    <field name="Width" type="Word" visibility="public" />
+    <field name="Height" type="Word" visibility="public" />
+    <field name="bShow" type="Boolean" visibility="public" />
+  </struct>
+  <pointer name="pBtnConf" type="BtnConf" indircnt="1" />
+</namespace>

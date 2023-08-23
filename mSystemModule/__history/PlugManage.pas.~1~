@@ -1,0 +1,385 @@
+unit PlugManage;
+
+interface
+
+uses
+  Windows, Classes, SysUtils, Grobal2, EDcode, Share, IniFiles, RSA, SDK, D7ScktComp;
+
+type
+  TPlugManage = class(TThread)
+    ClientSocket: TClientSocket;
+    SocketStream: TWinSocketStream;
+    CheckStatus: TCheckStatus;
+    ServerAddrIndex: Integer;
+    CheckStep: TCheckStep;
+    nRemoteAddr: Integer;
+    sReviceMsg: string;
+    boReadyCheck: Boolean;
+  private
+    FFirst: Boolean;
+    boGetFromIPArray: Boolean;
+    procedure ClientSocketConnect(Sender: TObject; Socket: TCustomWinSocket); dynamic;
+    procedure ClientSocketDisconnect(Sender: TObject; Socket: TCustomWinSocket); dynamic;
+    procedure ClientSocketError(Sender: TObject; Socket: TCustomWinSocket; ErrorEvent: TErrorEvent; var ErrorCode: Integer); dynamic;
+    procedure ClientSocketRead(Sender: TObject; Socket: TCustomWinSocket); dynamic;
+    procedure ProcessServerPacket(); dynamic;
+    procedure SendCheckServerMsg(); dynamic;
+    procedure SendLicenseMsg(); dynamic;
+    procedure SendLicenseMsg2(); dynamic;
+    procedure SendSocket(DefMsg: TDefaultMessage; sMsg: string); dynamic;
+  protected
+    procedure Execute; override;
+  public
+    constructor Create(CreateSuspended: Boolean); dynamic;
+    destructor Destroy; override;
+    function LoadUserLicense(): Boolean; virtual;
+  end;
+
+function GetLicenseInfo(var nDay: Integer; var dwM2Crc: PChar): Integer; stdcall;
+function IsInAddrList(sIPaddr: string): Boolean;
+
+var
+  PlugEngine                : TPlugManage;
+  UserLicense               : TUserLicense;
+  ServerAddr                : array[0..15] of TIPAddr = (
+    (A: 61; B: 128; C: 194; D: 169; Port: 63000),
+    (A: 61; B: 128; C: 194; D: 170; Port: 63000),
+    (A: 219; B: 153; C: 11; D: 47; Port: 63000),
+    (A: 61; B: 128; C: 194; D: 171; Port: 63000),
+    (A: 61; B: 128; C: 194; D: 172; Port: 63000),
+    (A: 219; B: 153; C: 11; D: 53; Port: 63000),
+    (A: 61; B: 128; C: 194; D: 173; Port: 63000),
+    (A: 61; B: 128; C: 194; D: 174; Port: 63000),
+    (A: 61; B: 128; C: 194; D: 175; Port: 63000),
+    (A: 61; B: 128; C: 194; D: 176; Port: 63000),
+    (A: 219; B: 153; C: 11; D: 60; Port: 63000),
+    (A: 219; B: 153; C: 11; D: 9; Port: 63000),
+    (A: 219; B: 153; C: 11; D: 57; Port: 63000),
+    (A: 219; B: 153; C: 7; D: 82; Port: 63000),
+    (A: 219; B: 153; C: 7; D: 90; Port: 63000),
+    (A: 219; B: 153; C: 7; D: 78; Port: 63000));
+
+implementation
+
+uses HUtil32, ClassModule, Module;
+var
+  SendLocalRSAKey           : Int64 = 36865;
+  SendRSA_N                 : Int64 = 1594223867;
+
+function IsInAddrList(sIPaddr: string): Boolean;
+var
+  i                         : Integer;
+  sIP                       : string;
+begin
+  Result := False;
+  for i := Low(ServerAddr) to High(ServerAddr) do begin
+    sIP := MakeIPToStr(ServerAddr[i]);
+    if sIP = sIPaddr then begin
+      Result := True;
+      Break;
+    end;
+  end;
+end;
+
+function GetLicenseInfo(var nDay: Integer; var dwM2Crc: PChar): Integer;
+begin
+  nDay := g_DConfig.nRemainDays;
+  dwM2Crc := PChar(g_DConfig.g_dwM2Crc);
+  Result := g_DConfig.nUserCount;
+end;
+
+{ ThreadPlug }
+
+procedure TPlugManage.ClientSocketConnect(Sender: TObject; Socket: TCustomWinSocket);
+begin
+  CheckStep := c_SendClinetKey {c_CheckServer};
+  CheckStatus := c_Checking;
+  nRemoteAddr := MakeIPToInt(Socket.RemoteAddress);
+  UserLicense.UserIP := Socket.LocalAddress; //发送内网IP
+  UserLicense.ServerIP := Socket.RemoteAddress; //验证服务器IP
+  UserLicense.ServerPort := Socket.RemotePort; //验证服务器端口
+end;
+
+procedure TPlugManage.ClientSocketDisconnect(Sender: TObject;
+  Socket: TCustomWinSocket);
+begin
+
+end;
+
+procedure TPlugManage.ClientSocketError(Sender: TObject;
+  Socket: TCustomWinSocket; ErrorEvent: TErrorEvent;
+  var ErrorCode: Integer);
+begin
+  CheckStatus := c_CheckError;
+  ErrorCode := 0;
+  Socket.Close;
+end;
+
+procedure TPlugManage.ClientSocketRead(Sender: TObject;
+  Socket: TCustomWinSocket);
+begin
+  sReviceMsg := sReviceMsg + Socket.ReceiveText;
+end;
+
+constructor TPlugManage.Create(CreateSuspended: Boolean);
+begin
+  inherited;
+  FFirst := False;
+  boReadyCheck := False;
+  LoadUserLicense();
+  ClientSocket := TClientSocket.Create(nil);
+  ClientSocket.ClientType := ctBlocking;
+  ClientSocket.OnConnect := ClientSocketConnect;
+  ClientSocket.OnDisconnect := ClientSocketDisconnect;
+  ClientSocket.OnError := ClientSocketError;
+  ClientSocket.OnRead := ClientSocketRead;
+  CheckStatus := c_Idle;
+  CheckStep := c_None;
+  ServerAddrIndex := -1;
+  boGetFromIPArray := False;
+end;
+
+destructor TPlugManage.Destroy;
+begin
+  inherited;
+end;
+
+//var
+  //glist                     : TStringList;
+
+procedure TPlugManage.Execute;
+var
+  nMsgLen                   : Integer;
+  ReceiveBuffer             : array[0..4095] of Char;
+  sReviceBuff               : string;
+  dwConnTick                : LongWord;
+  sSendMsg                  : string;
+  Year, Month, Day          : Word;
+begin
+{$IF USEWLSDK}
+{$I '..\Common\Macros\VMPB.inc'}
+  //while not Terminated do begin
+  if not FFirst then begin
+    FFirst := True;
+    if Assigned(GetSelfCrc) then
+      g_DConfig.g_dwM2Crc := GetSelfCrc();
+    if (CompareText(g_DConfig.g_dwM2Crc, g_Md5Crc^) <> 0) then begin
+      g_Config.nCheckLicenseFail := -8;
+      g_DConfig.boExpired := True;
+      SetLicense(-9);
+      Exitprocess(0);
+      //Break;
+    end;
+  end;
+
+  DecodeDate(Date, Year, Month, Day);
+  if ((Year >= ENDYEAR^) and ((Month * 30 + Day) > ENDMONTH^ * 30 + ENDDAY^)) or
+    ((Year <= ENDYEARMIN^) and ((Month * 30 + Day) < ENDMONTHMIN^ * 30 + ENDDAYMIN^)) then begin
+    g_DConfig.boExpired := True;
+  end;
+
+  //  Sleep(60 * 60 * 1000);
+  //end;
+{$I '..\Common\Macros\VMPE.inc'}
+{$IFEND}
+end;
+
+function TPlugManage.LoadUserLicense: Boolean;
+var
+  Config                    : TIniFile;
+begin
+{$I '..\Common\Macros\VMPBM.inc'}
+  Result := True;
+  if g_DConfig.g_dwM2Crc = '' then begin
+    if Assigned(GetSelfCrc) then
+      g_DConfig.g_dwM2Crc := GetSelfCrc();
+  end;
+  {if IsExpired() then begin
+    MainOutMessage(PChar('IsExpired...'), Length('IsExpired...'), 0);
+  end;}
+  if (CompareText(g_DConfig.g_dwM2Crc, g_Md5Crc^) <> 0) or IsExpired() then begin
+    //g_Config.nCheckLicenseFail := -8;
+    //g_DConfig.boExpired := True;
+    //SetLicense(-9);
+    Result := False;
+  end else begin
+    boReadyCheck := True;
+  end;
+
+  {Config := TIniFile.Create('!setup.txt');
+  if Config <> nil then begin
+    UserLicense.Userkey := Config.ReadString('Reg', 'Key', '');
+    UserLicense.UserIP := Config.ReadString('Reg', 'IP', '');
+    UserLicense.ServerIP := Config.ReadString('Reg', 'ServerAddr', '');
+    UserLicense.ServerPort := Config.ReadInteger('Reg', 'ServerPort', 0);
+    Config.Free;
+    boReadyCheck := True;
+  end;}
+{$I '..\Common\Macros\VMPE.inc'}
+end;
+
+procedure TPlugManage.ProcessServerPacket;
+var
+  sData                     : string;
+  sDefMsg                   : string;
+  sBlockMsg                 : string;
+  DefMsg                    : TDefaultMessage;
+  BlockBuff                 : PChar;
+  OldBlock                  : PChar;
+  sXORStr                   : string;
+  ULEx                      : TUserLicenseEx;
+  ChItem                    : TChItem;
+  XORRecord                 : TXORRecord;
+begin
+  try
+    while (True) do begin
+      if Pos('!', sReviceMsg) <= 0 then Break;
+      sReviceMsg := ArrestStringEx(sReviceMsg, '#', '!', sData);
+      if sData <> '' then begin
+        sBlockMsg := GetValidStr3(sData, sDefMsg, ['/']);
+        if Length(sDefMsg) = DEFBLOCKSIZE then begin
+          DefMsg := DecodeMessage(sDefMsg);
+          if (CheckStep = c_SendClinetKey {c_CheckServer}) and (DefMsg.Ident = GM_CHECKCLIENT) then begin
+            nLocalXORKey := GetXORKey();
+            g_DConfig.dwServerTick := MakeLong(DefMsg.Tag, DefMsg.Series);
+            SendLicenseMsg();
+            sReviceMsg := '';
+            Break;
+          end;
+          if (CheckStep = c_SendLicense) and (DefMsg.Ident = GM_DATA) then begin
+            if DefMsg.Recog <= 4069 then begin
+              g_DConfig.nRemainDays := DefMsg.Tag;
+              g_DConfig.nUserCount := DefMsg.Series;
+              GetMem(BlockBuff, DefMsg.Recog);
+              DecodeBuffer(sBlockMsg, BlockBuff, DefMsg.Recog);
+              if BlockBuff[DefMsg.Recog - 1] = Char($C3) then begin
+                CopyCodeToBuffer(BlockBuff);
+                OldBlock := ProcBlock;
+                ProcBlock := BlockBuff;
+                if OldBlock <> nil then
+                  FreeMem(OldBlock);
+                CheckStep := c_SendLicense2;
+                SendLicenseMsg2;
+                //CheckStep:=c_CheckOver;
+                //CheckStatus:=c_CheckOK;
+              end else begin
+                CheckStatus := c_CheckFail;
+                sReviceMsg := '';
+                Break;
+              end;
+            end else begin
+              CheckStatus := c_CheckFail;
+              sReviceMsg := '';
+              Break;
+            end;
+            sReviceMsg := '';
+          end;
+
+          //第二次Send License
+          if (CheckStep = c_SendLicense2) and (DefMsg.Ident = GM_DATA) then begin
+            if (DefMsg.Param = 2) and (DefMsg.Recog <= 4069) then begin
+              //nRemainDays:=DefMsg.Tag;
+              //nUserCount:=DefMsg.Series;
+              GetMem(BlockBuff, DefMsg.Recog);
+              DecodeBuffer(sBlockMsg, @ULEx, SizeOf(TUserLicenseEx));
+              //RSA解码
+              RSADecode(ULEx.RSARecord.RSAItem, ChItem, 462937633, 1452762767); //62041
+              Move(ChItem, XORRecord, SizeOf(TXORRecord));
+              sXORStr := XORRecord.XORItem;
+              nLocalXORKey := nLocalXORKey;
+              nRemoteXORKey := XORRecord.XORKey;
+              g_Config.nProcessTick := nLocalXORKey;
+              g_Config.nProcesstime := nRemoteXORKey;
+              SetRemoteXORKey(XORRecord.XORKey, PChar(sXORStr));
+              CheckStep := c_CheckOver;
+              CheckStatus := c_CheckOK;
+              sReviceMsg := '';
+              Break;
+            end;
+          end;
+        end;
+      end;
+    end;
+  except
+  end;
+end;
+
+procedure TPlugManage.SendCheckServerMsg;
+var
+  DefMsg                    : TDefaultMessage;
+  CodeBuff                  : PChar;
+  nLen                      : Integer;
+begin
+  CheckStep := c_SendClinetKey {c_CheckServer};
+  DefMsg.Ident := GM_CHECKSERVER;
+  DefMsg.Recog := nRemoteAddr;
+  DefMsg.Param := 1;
+  nLen := GetCodeBlock(CodeBuff);
+  DefMsg.Tag := nLen;
+  SendSocket(DefMsg, EncodeString(EncodeBuffer(CodeBuff, nLen)));
+end;
+
+procedure TPlugManage.SendLicenseMsg;
+var
+  DefMsg                    : TDefaultMessage;
+begin
+  g_DConfig.dwLocalTick := GetTickCount();
+  CheckStep := c_SendLicense;
+  DefMsg.Ident := GM_DATA;
+  DefMsg.Recog := nRemoteAddr;
+  DefMsg.Param := 1;
+  DefMsg.Tag := HiWord(g_DConfig.dwServerTick); //增加
+  DefMsg.Series := LoWord(g_DConfig.dwServerTick); //增加
+  SendSocket(DefMsg, EncodeBuffer(@UserLicense, SizeOf(TUserLicense)));
+end;
+
+procedure TPlugManage.SendLicenseMsg2;
+var
+  DefMsg                    : TDefaultMessage;
+  ULEx                      : TUserLicenseEx;
+  XORRecord                 : TXORRecord;
+  XORItem                   : TXORItem;
+  ChItem                    : TChItem;
+
+begin
+  CheckStep := c_SendLicense2;
+  DefMsg.Ident := GM_DATA;
+  DefMsg.Recog := nRemoteAddr;
+  DefMsg.Param := 2;                    //RSA加密版本
+  //XOR赋值
+  XORItem.SoftType := 3;                //DBServer
+  XORItem.MainVersion := g_DConfig.fVersion;
+  XORItem.DLLVersion := DLLVersion;
+  XORItem.IniRegIP := MakeIPToInt(g_DConfig.sRegIniIP);
+  XORItem.Param1 := 0;
+  //XOR加密XORItem -> ChItem
+  XORCode(Char(nLocalXORKey), @XORItem, ChItem, SizeOf(TXORItem));
+  //XORRecord赋值
+  XORRecord.XORKey := nLocalXORKey;
+  XORRecord.XORItemLen := SizeOf(TXORItem);
+  Move(ChItem, XORRecord.XORItem, SizeOf(TXORItem));
+  //XORRecord -> ChItem
+  Move(XORRecord, ChItem, SizeOf(TXORRecord));
+  ULEx.RSARecord.RSAKey := 0;
+  ULEx.RSARecord.RSAItemLen := SizeOf(TXORRecord);
+  //RSA 加密
+  RSAEncode(ChItem, SizeOf(TXORRecord), ULEx.RSARecord.RSAItem, SendLocalRSAKey, SendRSA_N);
+  ULEx.UserLicese.Userkey := UserLicense.Userkey;
+  ULEx.UserLicese.UserIP := UserLicense.UserIP;
+  ULEx.UserLicese.ServerIP := UserLicense.ServerIP;
+  ULEx.UserLicese.ServerPort := UserLicense.ServerPort;
+  //SendSocket(DefMsg,EncodeBuffer(@UserLicense,SizeOf(TUserLicense)));
+  SendSocket(DefMsg, EncodeBuffer(@ULEx, SizeOf(TUserLicenseEx)));
+end;
+
+procedure TPlugManage.SendSocket(DefMsg: TDefaultMessage; sMsg: string);
+var
+  sSendMsg                  : string;
+begin
+  sSendMsg := '#' + EncodeMessage(DefMsg) + '/' + sMsg + '!';
+  if ClientSocket.Socket.Connected then
+    ClientSocket.Socket.SendText(sSendMsg);
+end;
+
+end.
+
